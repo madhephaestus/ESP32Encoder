@@ -1,2 +1,3 @@
-# BNO055SimplePacketComs
-A simple Packet coms Server for the BNO055
+#ESP32Encoder
+
+An interrupt driven library for the esp32.
