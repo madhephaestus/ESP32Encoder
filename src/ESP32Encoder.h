@@ -9,7 +9,7 @@ private:
 	int aPinNumber;
 	int bPinNumber;
 	int64_t count=0;
-
+	static ESP32Encoder *encoders[MAX_ESP32_ENCODERS];
 public:
 	ESP32Encoder();
 	~ESP32Encoder();
@@ -18,5 +18,7 @@ public:
 	int64_t getCount();
 	void interruptA();
 	void interruptB();
+	boolean isAttached(){return attached;}
+	void setCount(int64_t value);
 
 };
