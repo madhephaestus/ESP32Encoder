@@ -6,75 +6,71 @@
  */
 
 #include <ESP32Encoder.h>
-
+#include <driver/gpio.h>
 ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, NULL, NULL, NULL,
 NULL, NULL, NULL, NULL,
 NULL, NULL };
-void interruptA(ESP32Encoder * encoderInstance) {
-	encoderInstance->interruptA();
-}
-void interruptB(ESP32Encoder * encoderInstance) {
-	encoderInstance->interruptB();
-}
+
+
 void IRAM_ATTR handleInterrupt0A() {
-	interruptA(ESP32Encoder::encoders[0]);
+	ESP32Encoder::encoders[0]->interruptA();
 }
 void IRAM_ATTR handleInterrupt0B() {
-	interruptB(ESP32Encoder::encoders[0]);
+	ESP32Encoder::encoders[0]->interruptB();
 }
 void IRAM_ATTR handleInterrupt1A() {
-	interruptA(ESP32Encoder::encoders[1]);
+	ESP32Encoder::encoders[1]->interruptA();
 }
 void IRAM_ATTR handleInterrupt1B() {
-	interruptB(ESP32Encoder::encoders[1]);
+	ESP32Encoder::encoders[1]->interruptB();
 }
 void IRAM_ATTR handleInterrupt2A() {
-	interruptA(ESP32Encoder::encoders[2]);
+	ESP32Encoder::encoders[2]->interruptA();
 }
 void IRAM_ATTR handleInterrupt2B() {
-	interruptB(ESP32Encoder::encoders[2]);
+	ESP32Encoder::encoders[2]->interruptB();
 }
 void IRAM_ATTR handleInterrupt3A() {
-	interruptA(ESP32Encoder::encoders[3]);
+	ESP32Encoder::encoders[3]->interruptA();
 }
 void IRAM_ATTR handleInterrupt3B() {
-	interruptB(ESP32Encoder::encoders[3]);
+	ESP32Encoder::encoders[3]->interruptB();
 }
 void IRAM_ATTR handleInterrupt4A() {
-	interruptA(ESP32Encoder::encoders[4]);
+	ESP32Encoder::encoders[4]->interruptA();
 }
 void IRAM_ATTR handleInterrupt4B() {
-	interruptB(ESP32Encoder::encoders[4]);
+	ESP32Encoder::encoders[4]->interruptB();
 }
 void IRAM_ATTR handleInterrupt5A() {
-	interruptA(ESP32Encoder::encoders[5]);
+	ESP32Encoder::encoders[5]->interruptA();
 }
 void IRAM_ATTR handleInterrupt5B() {
-	interruptB(ESP32Encoder::encoders[5]);
+	ESP32Encoder::encoders[5]->interruptB();
 }
 void IRAM_ATTR handleInterrupt6A() {
-	interruptA(ESP32Encoder::encoders[6]);
+	ESP32Encoder::encoders[6]->interruptA();
 }
 void IRAM_ATTR handleInterrupt6B() {
-	interruptB(ESP32Encoder::encoders[6]);
+	ESP32Encoder::encoders[6]->interruptB();
 }
 void IRAM_ATTR handleInterrupt7A() {
-	interruptA(ESP32Encoder::encoders[7]);
+	ESP32Encoder::encoders[7]->interruptA();
 }
 void IRAM_ATTR handleInterrupt7B() {
-	interruptB(ESP32Encoder::encoders[7]);
+	ESP32Encoder::encoders[7]->interruptB();
 }
 void IRAM_ATTR handleInterrupt8A() {
-	interruptA(ESP32Encoder::encoders[8]);
+	ESP32Encoder::encoders[8]->interruptA();
 }
 void IRAM_ATTR handleInterrupt8B() {
-	interruptB(ESP32Encoder::encoders[8]);
+	ESP32Encoder::encoders[8]->interruptB();
 }
 void IRAM_ATTR handleInterrupt9A() {
-	interruptA(ESP32Encoder::encoders[9]);
+	ESP32Encoder::encoders[9]->interruptA();
 }
 void IRAM_ATTR handleInterrupt9B() {
-	interruptB(ESP32Encoder::encoders[9]);
+	ESP32Encoder::encoders[9]->interruptB();
 }
 
 ESP32Encoder::ESP32Encoder() {
@@ -201,39 +197,43 @@ void ESP32Encoder::attachFullQuad(int aPintNumber, int bPinNumber) {
 void ESP32Encoder::attachHalfQuad(int aPintNumber, int bPinNumber) {
 	attach(aPintNumber, bPinNumber, false);
 }
-void ESP32Encoder::setCount(int64_t value) {
+void ESP32Encoder::setCount(int32_t value) {
 	portENTER_CRITICAL_ISR(&mux);
 	count = value;
 	portEXIT_CRITICAL_ISR(&mux);
 }
 
-int64_t ESP32Encoder::getCount() {
-	int64_t tmp = 0;
+int32_t ESP32Encoder::getCount() {
+	int32_t tmp = 0;
 	portENTER_CRITICAL_ISR(&mux);
 	tmp = count;
 	portEXIT_CRITICAL_ISR(&mux);
 	return tmp;
 }
+//https://docs.espressif.com/projects/esp-idf/en/latest/api-reference/peripherals/gpio.html#_CPPv214gpio_get_level10gpio_num_t
 void ESP32Encoder::interruptA() {
-	if (digitalRead(aPinNumber) == digitalRead(bPinNumber)) {
-		portENTER_CRITICAL_ISR(&mux);
+	portENTER_CRITICAL_ISR(&mux);
+	if (gpio_get_level((gpio_num_t)aPinNumber) == gpio_get_level((gpio_num_t)bPinNumber)) {
+		//portENTER_CRITICAL_ISR(&mux);
 		count++;
-		portEXIT_CRITICAL_ISR(&mux);
+		//portEXIT_CRITICAL_ISR(&mux);
 	} else {
-		portENTER_CRITICAL_ISR(&mux);
+		//portENTER_CRITICAL_ISR(&mux);
 		count--;
-		portEXIT_CRITICAL_ISR(&mux);
+		//portEXIT_CRITICAL_ISR(&mux);
 	}
-
+	portEXIT_CRITICAL_ISR(&mux);
 }
 void ESP32Encoder::interruptB() {
-	if (digitalRead(aPinNumber) != digitalRead(bPinNumber)) {
-		portENTER_CRITICAL_ISR(&mux);
+	portENTER_CRITICAL_ISR(&mux);
+	if (gpio_get_level((gpio_num_t)aPinNumber) != gpio_get_level((gpio_num_t)bPinNumber)) {
+		//portENTER_CRITICAL_ISR(&mux);
 		count++;
-		portEXIT_CRITICAL_ISR(&mux);
+		//portEXIT_CRITICAL_ISR(&mux);
 	} else {
-		portENTER_CRITICAL_ISR(&mux);
+		//portENTER_CRITICAL_ISR(&mux);
 		count--;
-		portEXIT_CRITICAL_ISR(&mux);
+		//portEXIT_CRITICAL_ISR(&mux);
 	}
+	portEXIT_CRITICAL_ISR(&mux);
 }

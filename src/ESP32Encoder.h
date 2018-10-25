@@ -8,17 +8,17 @@ private:
 	boolean attached=false;
 	int aPinNumber;
 	int bPinNumber;
-	int64_t count=0;
+	volatile int32_t count=0;
 public:
 	ESP32Encoder();
 	~ESP32Encoder();
 	void attachFullQuad(int aPintNumber, int bPinNumber);
 	void attachHalfQuad(int aPintNumber, int bPinNumber);
-	int64_t getCount();
+	int32_t getCount();
 	void interruptA();
 	void interruptB();
 	boolean isAttached(){return attached;}
-	void setCount(int64_t value);
+	void setCount(int32_t value);
 	static ESP32Encoder *encoders[MAX_ESP32_ENCODERS];
 
 
