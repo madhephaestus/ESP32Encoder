@@ -15,7 +15,8 @@ private:
 public:
 	ESP32Encoder();
 	~ESP32Encoder();
-	void attachFullQuad(int aPintNumber, int bPinNumber);
+	void attachHalfQuad(int aPintNumber, int bPinNumber);
+	void attachSingleEdge(int aPintNumber, int bPinNumber);
 	//void attachHalfQuad(int aPintNumber, int bPinNumber);
 	int32_t getCount();
 
@@ -25,5 +26,6 @@ public:
 	gpio_num_t aPinNumber;
 	gpio_num_t bPinNumber;
 	pcnt_unit_t unit;
-	bool fullQuad=true;
+	bool fullQuad=false;
+	int countsMode = 2;
 };

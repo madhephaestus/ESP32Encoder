@@ -116,7 +116,7 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 		Serial.println("Too many encoders, FAIL!");
 		return;
 	}
-
+	fullQuad = fq;
 	// Set data now that pin attach checks are done
 	this->aPinNumber = (gpio_num_t) a;
 	this->bPinNumber = (gpio_num_t) b;
@@ -133,7 +133,7 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 	r_enc_config		.unit = unit;
 	r_enc_config		.channel = PCNT_CHANNEL_0;
 
-	r_enc_config		.pos_mode = PCNT_COUNT_DIS; //Count Only On Rising-Edges
+	r_enc_config		.pos_mode = fullQuad?PCNT_COUNT_DEC:PCNT_COUNT_DIS; //Count Only On Rising-Edges
 	r_enc_config		.neg_mode = PCNT_COUNT_INC;   // Discard Falling-Edge
 
 	r_enc_config		.lctrl_mode = PCNT_MODE_KEEP;    // Rising A on HIGH B = CW Step
@@ -158,8 +158,12 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 
 }
 
-void ESP32Encoder::attachFullQuad(int aPintNumber, int bPinNumber) {
+void ESP32Encoder::attachHalfQuad(int aPintNumber, int bPinNumber){
 	attach(aPintNumber, bPinNumber, true);
+
+}
+void ESP32Encoder::attachSingleEdge(int aPintNumber, int bPinNumber){
+	attach(aPintNumber, bPinNumber, false);
 }
 
 void ESP32Encoder::setCount(int32_t value) {
