@@ -76,19 +76,24 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 		Serial.println("Too many encoders, FAIL!");
 		return;
 	}
-	fullQuad = fq;
+
 	// Set data now that pin attach checks are done
+	fullQuad = fq;
+		unit = (pcnt_unit_t) index;
 	this->aPinNumber = (gpio_num_t) a;
 	this->bPinNumber = (gpio_num_t) b;
+
+	//Set up the IO state of hte pin
 	gpio_pad_select_gpio(aPinNumber);
 	gpio_pad_select_gpio(bPinNumber);
 	gpio_set_direction(aPinNumber, GPIO_MODE_INPUT);
 	gpio_set_direction(bPinNumber, GPIO_MODE_INPUT);
-	unit = (pcnt_unit_t) index;
+	gpio_pulldown_en(aPinNumber);
+	gpio_pulldown_en(bPinNumber);
 
-
-	r_enc_config.pulse_gpio_num = aPinNumber; //Rotary Encoder Chan A (GPIO32)
-	r_enc_config.ctrl_gpio_num = bPinNumber;    //Rotary Encoder Chan B (GPIO33)
+	// Set up encoder PCNT configuration
+	r_enc_config.pulse_gpio_num = aPinNumber; //Rotary Encoder Chan A
+	r_enc_config.ctrl_gpio_num = bPinNumber;    //Rotary Encoder Chan B
 
 	r_enc_config.unit = unit;
 	r_enc_config.channel = PCNT_CHANNEL_0;
@@ -104,11 +109,11 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 
 	pcnt_unit_config(&r_enc_config);
 
+	// Filter out bounces and noise
 	pcnt_set_filter_value(unit, 250);  // Filter Runt Pulses
 	pcnt_filter_enable(unit);
 
-	gpio_pulldown_en(aPinNumber);
-	gpio_pulldown_en(bPinNumber);
+
 	/* Enable events on  maximum and minimum limit values */
 	pcnt_event_enable(unit, PCNT_EVT_H_LIM);
 	pcnt_event_enable(unit, PCNT_EVT_L_LIM);
