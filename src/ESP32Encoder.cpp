@@ -13,68 +13,9 @@
 ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, NULL, NULL,
 NULL,
 NULL, NULL, NULL, NULL };
-//
-//
-//void IRAM_ATTR handleInterrupt0A() {
-//	ESP32Encoder::encoders[0]->interruptA();
-//}
-//void IRAM_ATTR handleInterrupt0B() {
-//	ESP32Encoder::encoders[0]->interruptB();
-//}
-//void IRAM_ATTR handleInterrupt1A() {
-//	ESP32Encoder::encoders[1]->interruptA();
-//}
-//void IRAM_ATTR handleInterrupt1B() {
-//	ESP32Encoder::encoders[1]->interruptB();
-//}
-//void IRAM_ATTR handleInterrupt2A() {
-//	ESP32Encoder::encoders[2]->interruptA();
-//}
-//void IRAM_ATTR handleInterrupt2B() {
-//	ESP32Encoder::encoders[2]->interruptB();
-//}
-//void IRAM_ATTR handleInterrupt3A() {
-//	ESP32Encoder::encoders[3]->interruptA();
-//}
-//void IRAM_ATTR handleInterrupt3B() {
-//	ESP32Encoder::encoders[3]->interruptB();
-//}
-//void IRAM_ATTR handleInterrupt4A() {
-//	ESP32Encoder::encoders[4]->interruptA();
-//}
-//void IRAM_ATTR handleInterrupt4B() {
-//	ESP32Encoder::encoders[4]->interruptB();
-//}
-//void IRAM_ATTR handleInterrupt5A() {
-//	ESP32Encoder::encoders[5]->interruptA();
-//}
-//void IRAM_ATTR handleInterrupt5B() {
-//	ESP32Encoder::encoders[5]->interruptB();
-//}
-//void IRAM_ATTR handleInterrupt6A() {
-//	ESP32Encoder::encoders[6]->interruptA();
-//}
-//void IRAM_ATTR handleInterrupt6B() {
-//	ESP32Encoder::encoders[6]->interruptB();
-//}
-//void IRAM_ATTR handleInterrupt7A() {
-//	ESP32Encoder::encoders[7]->interruptA();
-//}
-//void IRAM_ATTR handleInterrupt7B() {
-//	ESP32Encoder::encoders[7]->interruptB();
-//}
-//void IRAM_ATTR handleInterrupt8A() {
-//	ESP32Encoder::encoders[8]->interruptA();
-//}
-//void IRAM_ATTR handleInterrupt8B() {
-//	ESP32Encoder::encoders[8]->interruptB();
-//}
-//void IRAM_ATTR handleInterrupt9A() {
-//	ESP32Encoder::encoders[9]->interruptA();
-//}
-//void IRAM_ATTR handleInterrupt9B() {
-//	ESP32Encoder::encoders[9]->interruptB();
-//}
+
+bool ESP32Encoder::attachedInterrupt=false;
+pcnt_isr_handle_t ESP32Encoder::user_isr_handle = NULL;
 
 ESP32Encoder::ESP32Encoder() {
 	attached = false;
@@ -82,23 +23,42 @@ ESP32Encoder::ESP32Encoder() {
 	bPinNumber = (gpio_num_t) 0;
 	working = false;
 	direction = false;
+	unit = (pcnt_unit_t) -1;
 }
 
 ESP32Encoder::~ESP32Encoder() {
 	// TODO Auto-generated destructor stub
 }
 
-//void ESP32Encoder::interrupt(gpio_num_t gpio) {
-//    if(working) {
-//        if(gpio == aPinNumber && gpio_get_level(aPinNumber))
-//            direction = gpio_get_level(bPinNumber);
-//        if(direction) {
-//            count++;
-//        } else {
-//            count--;
-//        }
-//    }
-//}
+/* Decode what PCNT's unit originated an interrupt
+ * and pass this information together with the event type
+ * the main program using a queue.
+ */
+static void IRAM_ATTR pcnt_example_intr_handler(void *arg) {
+	ESP32Encoder * ptr;
+
+	uint32_t intr_status = PCNT.int_st.val;
+	int i;
+
+	for (i = 0; i < PCNT_UNIT_MAX; i++) {
+		if (intr_status & (BIT(i))) {
+			ptr = ESP32Encoder::encoders[i];
+			/* Save the PCNT event type that caused an interrupt
+			 to pass it to the main program */
+
+			int status=0;
+			if(PCNT.status_unit[i].h_lim_lat){
+				status=ptr->r_enc_config.counter_h_lim;
+			}
+			if(PCNT.status_unit[i].l_lim_lat){
+				status=ptr->r_enc_config.counter_l_lim;
+			}
+			//pcnt_counter_clear(ptr->unit);
+			PCNT.int_clr.val = BIT(i); // clear the interrupt
+			ptr->count = status + ptr->count;
+		}
+	}
+}
 
 void ESP32Encoder::attach(int a, int b, boolean fq) {
 	if (attached) {
@@ -125,23 +85,22 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 	gpio_set_direction(aPinNumber, GPIO_MODE_OUTPUT);
 	gpio_set_direction(bPinNumber, GPIO_MODE_OUTPUT);
 	unit = (pcnt_unit_t) index;
-	pcnt_config_t r_enc_config;
 
-	r_enc_config	.pulse_gpio_num = aPinNumber; //Rotary Encoder Chan A (GPIO32)
-	r_enc_config		.ctrl_gpio_num = bPinNumber;    //Rotary Encoder Chan B (GPIO33)
 
-	r_enc_config		.unit = unit;
-	r_enc_config		.channel = PCNT_CHANNEL_0;
+	r_enc_config.pulse_gpio_num = aPinNumber; //Rotary Encoder Chan A (GPIO32)
+	r_enc_config.ctrl_gpio_num = bPinNumber;    //Rotary Encoder Chan B (GPIO33)
 
-	r_enc_config		.pos_mode = fullQuad?PCNT_COUNT_DEC:PCNT_COUNT_DIS; //Count Only On Rising-Edges
-	r_enc_config		.neg_mode = PCNT_COUNT_INC;   // Discard Falling-Edge
+	r_enc_config.unit = unit;
+	r_enc_config.channel = PCNT_CHANNEL_0;
 
-	r_enc_config		.lctrl_mode = PCNT_MODE_KEEP;    // Rising A on HIGH B = CW Step
-	r_enc_config		.hctrl_mode = PCNT_MODE_REVERSE; // Rising A on LOW B = CCW Step
+	r_enc_config.pos_mode = fullQuad ? PCNT_COUNT_DEC : PCNT_COUNT_DIS; //Count Only On Rising-Edges
+	r_enc_config.neg_mode = PCNT_COUNT_INC;   // Discard Falling-Edge
+
+	r_enc_config.lctrl_mode = PCNT_MODE_KEEP;    // Rising A on HIGH B = CW Step
+	r_enc_config.hctrl_mode = PCNT_MODE_REVERSE; // Rising A on LOW B = CCW Step
 
 	r_enc_config		.counter_h_lim = INT16_MAX;
 	r_enc_config		.counter_l_lim = INT16_MIN ;
-
 
 	pcnt_unit_config(&r_enc_config);
 
@@ -150,31 +109,43 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 
 	gpio_pulldown_en(aPinNumber);
 	gpio_pulldown_en(bPinNumber);
+	/* Enable events on  maximum and minimum limit values */
+	pcnt_event_enable(unit, PCNT_EVT_H_LIM);
+	pcnt_event_enable(unit, PCNT_EVT_L_LIM);
 
 	pcnt_counter_pause(unit); // Initial PCNT init
 	pcnt_counter_clear(unit);
+	/* Register ISR handler and enable interrupts for PCNT unit */
+	if(ESP32Encoder::attachedInterrupt==false){
+		ESP32Encoder::attachedInterrupt=true;
+		esp_err_t er = pcnt_isr_register(pcnt_example_intr_handler,(void *) NULL, (int)0,
+				(pcnt_isr_handle_t *)&ESP32Encoder::user_isr_handle);
+		if (er != ESP_OK){
+			Serial.println("Encoder wrap interupt failed");
+		}
+	}
+	pcnt_intr_enable(unit);
 	pcnt_counter_resume(unit);
-
 
 }
 
-void ESP32Encoder::attachHalfQuad(int aPintNumber, int bPinNumber){
+void ESP32Encoder::attachHalfQuad(int aPintNumber, int bPinNumber) {
 	attach(aPintNumber, bPinNumber, true);
 
 }
-void ESP32Encoder::attachSingleEdge(int aPintNumber, int bPinNumber){
+void ESP32Encoder::attachSingleEdge(int aPintNumber, int bPinNumber) {
 	attach(aPintNumber, bPinNumber, false);
 }
 
 void ESP32Encoder::setCount(int32_t value) {
-	int16_t c;
-	pcnt_get_counter_value(unit, &c);
-	count = value - c;
+	count = value - getCountRaw();
 }
-
-int32_t ESP32Encoder::getCount() {
+int32_t ESP32Encoder::getCountRaw() {
 	int16_t c;
 	pcnt_get_counter_value(unit, &c);
-	return c + count;
+	return c;
+}
+int32_t ESP32Encoder::getCount() {
+	return getCountRaw() + count;
 }
 
