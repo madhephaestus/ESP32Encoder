@@ -82,8 +82,8 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 	this->bPinNumber = (gpio_num_t) b;
 	gpio_pad_select_gpio(aPinNumber);
 	gpio_pad_select_gpio(bPinNumber);
-	gpio_set_direction(aPinNumber, GPIO_MODE_OUTPUT);
-	gpio_set_direction(bPinNumber, GPIO_MODE_OUTPUT);
+	gpio_set_direction(aPinNumber, GPIO_MODE_INPUT);
+	gpio_set_direction(bPinNumber, GPIO_MODE_INPUT);
 	unit = (pcnt_unit_t) index;
 
 
