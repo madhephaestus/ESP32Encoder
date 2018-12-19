@@ -9,9 +9,9 @@ void setup(){
 	Serial.println("Encoder Start = "+String((int32_t)encoder.getCount()));
 
 	// Attache pins for use as encoder pins
-	encoder.attachFullQuad(36, 39);
+	encoder.attachHalfQuad(36, 39);
 	// Attache pins for use as encoder pins
-	encoder2.attachFullQuad(34, 35);
+	encoder2.attachHalfQuad(34, 35);
 }
 
 void loop(){
