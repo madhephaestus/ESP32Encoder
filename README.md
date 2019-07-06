@@ -1,6 +1,6 @@
 # ESP32Encoder
 
-this library uses the ESP32 pulse counter hardware peripheral:
+ESP32Encoder library uses the ESP32 pulse counter hardware peripheral:
 
 https://docs.espressif.com/projects/esp-idf/en/latest/api-reference/peripherals/pcnt.html
 
