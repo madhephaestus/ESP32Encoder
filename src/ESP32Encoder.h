@@ -20,6 +20,9 @@ public:
 	//void attachHalfQuad(int aPintNumber, int bPinNumber);
 	int32_t getCount();
 	int32_t getCountRaw();
+	int32_t clearCount();
+	int32_t pauseCount();
+	int32_t resumeCount();
 
 	boolean isAttached(){return attached;}
 	void setCount(int32_t value);
