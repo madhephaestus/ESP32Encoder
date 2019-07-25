@@ -154,3 +154,15 @@ int32_t ESP32Encoder::getCount() {
 	return getCountRaw() + count;
 }
 
+int32_t ESP32Encoder::clearCount() {
+	count = 0;
+	return pcnt_counter_clear(unit);
+}
+
+int32_t ESP32Encoder::pauseCount() {
+	return pcnt_counter_pause(unit);
+}
+
+int32_t ESP32Encoder::resumeCount() {
+	return pcnt_counter_resume(unit);
+}
