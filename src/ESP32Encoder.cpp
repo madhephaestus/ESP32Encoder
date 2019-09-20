@@ -10,6 +10,7 @@
 //static ESP32Encoder *gpio2enc[48];
 //
 //
+bool ESP32Encoder::useInternalWeakPullResistors=true;
 ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, NULL, NULL,
 NULL,
 NULL, NULL, NULL, NULL };
@@ -88,8 +89,10 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 	gpio_pad_select_gpio(bPinNumber);
 	gpio_set_direction(aPinNumber, GPIO_MODE_INPUT);
 	gpio_set_direction(bPinNumber, GPIO_MODE_INPUT);
-	gpio_pulldown_en(aPinNumber);
-	gpio_pulldown_en(bPinNumber);
+	if(useInternalWeakPullResistors){
+		gpio_pulldown_en(aPinNumber);
+		gpio_pulldown_en(bPinNumber);
+	}
 
 	// Set up encoder PCNT configuration
 	r_enc_config.pulse_gpio_num = aPinNumber; //Rotary Encoder Chan A
