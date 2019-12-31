@@ -112,6 +112,27 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 
 	pcnt_unit_config(&r_enc_config);
 
+	if (fullQuad) {
+		// set up second channel for full quad
+		r_enc_config.pulse_gpio_num = bPinNumber; //make prior control into signal
+		r_enc_config.ctrl_gpio_num = aPinNumber;    //and prior signal into control
+
+		r_enc_config.unit = unit;
+		r_enc_config.channel = PCNT_CHANNEL_1; // channel 1
+
+		r_enc_config.pos_mode = fullQuad ? PCNT_COUNT_DEC : PCNT_COUNT_DIS; //Count Only On Rising-Edges
+		r_enc_config.neg_mode = PCNT_COUNT_INC;   // Discard Falling-Edge
+
+		r_enc_config.lctrl_mode = PCNT_MODE_REVERSE;    // prior high mode is now low
+		r_enc_config.hctrl_mode = PCNT_MODE_KEEP; // prior low mode is now high
+
+		r_enc_config		.counter_h_lim = INT16_MAX;
+		r_enc_config		.counter_l_lim = INT16_MIN ;
+
+		pcnt_unit_config(&r_enc_config);
+	}
+
+
 	// Filter out bounces and noise
 	pcnt_set_filter_value(unit, 250);  // Filter Runt Pulses
 	pcnt_filter_enable(unit);
