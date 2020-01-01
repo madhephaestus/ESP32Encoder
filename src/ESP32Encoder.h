@@ -3,9 +3,16 @@
 #include <driver/gpio.h>
 #include "driver/pcnt.h"
 #define MAX_ESP32_ENCODERS PCNT_UNIT_MAX
+
+enum encType {
+single,
+half,
+full
+};
+
 class ESP32Encoder {
 private:
-	void attach(int aPintNumber, int bPinNumber, boolean fullQuad);
+	void attach(int aPintNumber, int bPinNumber, enum encType et);
 	boolean attached=false;
 
 
@@ -16,6 +23,7 @@ public:
 	ESP32Encoder();
 	~ESP32Encoder();
 	void attachHalfQuad(int aPintNumber, int bPinNumber);
+	void attachFullQuad(int aPintNumber, int bPinNumber);
 	void attachSingleEdge(int aPintNumber, int bPinNumber);
 	//void attachHalfQuad(int aPintNumber, int bPinNumber);
 	int32_t getCount();
