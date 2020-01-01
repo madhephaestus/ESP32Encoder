@@ -61,7 +61,7 @@ static void IRAM_ATTR pcnt_example_intr_handler(void *arg) {
 	}
 }
 
-void ESP32Encoder::attach(int a, int b, boolean fq) {
+void ESP32Encoder::attach(int a, int b, enum encType et) {
 	if (attached) {
 		Serial.println("All ready attached, FAIL!");
 		return;
@@ -79,7 +79,7 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 	}
 
 	// Set data now that pin attach checks are done
-	fullQuad = fq;
+	fullQuad = et != single;
 		unit = (pcnt_unit_t) index;
 	this->aPinNumber = (gpio_num_t) a;
 	this->bPinNumber = (gpio_num_t) b;
@@ -112,7 +112,7 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 
 	pcnt_unit_config(&r_enc_config);
 
-	if (fullQuad) {
+	if (et == full) {
 		// set up second channel for full quad
 		r_enc_config.pulse_gpio_num = bPinNumber; //make prior control into signal
 		r_enc_config.ctrl_gpio_num = aPinNumber;    //and prior signal into control
@@ -120,7 +120,7 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 		r_enc_config.unit = unit;
 		r_enc_config.channel = PCNT_CHANNEL_1; // channel 1
 
-		r_enc_config.pos_mode = fullQuad ? PCNT_COUNT_DEC : PCNT_COUNT_DIS; //Count Only On Rising-Edges
+		r_enc_config.pos_mode = PCNT_COUNT_DEC; //Count Only On Rising-Edges
 		r_enc_config.neg_mode = PCNT_COUNT_INC;   // Discard Falling-Edge
 
 		r_enc_config.lctrl_mode = PCNT_MODE_REVERSE;    // prior high mode is now low
@@ -130,6 +130,23 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 		r_enc_config		.counter_l_lim = INT16_MIN ;
 
 		pcnt_unit_config(&r_enc_config);
+	} else { // make sure channel 1 is not set when not full quad
+		r_enc_config.pulse_gpio_num = bPinNumber; //make prior control into signal
+		r_enc_config.ctrl_gpio_num = aPinNumber;    //and prior signal into control
+
+		r_enc_config.unit = unit;
+		r_enc_config.channel = PCNT_CHANNEL_1; // channel 1
+
+		r_enc_config.pos_mode = PCNT_COUNT_DIS; //disabling channel 1
+		r_enc_config.neg_mode = PCNT_COUNT_DIS;   // disabling channel 1
+
+		r_enc_config.lctrl_mode = PCNT_MODE_DISABLE;    // disabling channel 1
+		r_enc_config.hctrl_mode = PCNT_MODE_DISABLE; // disabling channel 1
+
+		r_enc_config		.counter_h_lim = INT16_MAX;
+		r_enc_config		.counter_l_lim = INT16_MIN ;
+
+		pcnt_unit_config(&r_enc_config);	
 	}
 
 
@@ -159,11 +176,14 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 }
 
 void ESP32Encoder::attachHalfQuad(int aPintNumber, int bPinNumber) {
-	attach(aPintNumber, bPinNumber, true);
+	attach(aPintNumber, bPinNumber, half);
 
 }
 void ESP32Encoder::attachSingleEdge(int aPintNumber, int bPinNumber) {
-	attach(aPintNumber, bPinNumber, false);
+	attach(aPintNumber, bPinNumber, single);
+}
+void ESP32Encoder::attachFullQuad(int aPintNumber, int bPinNumber) {
+	attach(aPintNumber, bPinNumber, full);
 }
 
 void ESP32Encoder::setCount(int32_t value) {
