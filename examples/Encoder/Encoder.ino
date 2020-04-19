@@ -17,15 +17,15 @@ void setup(){
 	// set starting count value
 	encoder.setCount(37);
 
-	// clear the encoder's raw count and set the tracked count to zero
-	encoder2.clearCount();
-
 	Serial.println("Encoder Start = "+String((int32_t)encoder.getCount()));
 
 	// Attache pins for use as encoder pins
 	encoder.attachHalfQuad(36, 39);
 	// Attache pins for use as encoder pins
 	encoder2.attachHalfQuad(34, 35);
+	
+	// clear the encoder's raw count and set the tracked count to zero
+	encoder2.clearCount();
 
 	// set the lastToggle
 	encoder2lastToggled = millis();
