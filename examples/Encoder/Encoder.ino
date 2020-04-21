@@ -20,9 +20,9 @@ void setup(){
 	Serial.println("Encoder Start = "+String((int32_t)encoder.getCount()));
 
 	// Attache pins for use as encoder pins
-	encoder.attachHalfQuad(36, 39);
+	encoder.attachHalfQuad(12, 13);
 	// Attache pins for use as encoder pins
-	encoder2.attachHalfQuad(34, 35);
+	encoder2.attachHalfQuad(6, 15);
 	
 	// clear the encoder's raw count and set the tracked count to zero
 	encoder2.clearCount();
