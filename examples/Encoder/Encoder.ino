@@ -17,7 +17,7 @@ void setup(){
 	// Attache pins for use as encoder pins
 	encoder.attachHalfQuad(12, 13);
 	// Attache pins for use as encoder pins
-	encoder2.attachHalfQuad(6, 15);
+	encoder2.attachHalfQuad(2, 15);
 		
 	// set starting count value after attaching
 	encoder.setCount(37);
