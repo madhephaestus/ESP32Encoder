@@ -10,7 +10,7 @@
 //static ESP32Encoder *gpio2enc[48];
 //
 //
-bool ESP32Encoder::useInternalWeakPullResistors=DOWN;
+enum puType ESP32Encoder::useInternalWeakPullResistors=DOWN;
 ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, NULL, NULL,
 NULL,
 NULL, NULL, NULL, NULL };

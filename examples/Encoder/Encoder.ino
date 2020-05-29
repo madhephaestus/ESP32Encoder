@@ -15,8 +15,7 @@ void setup(){
 
 	ESP32Encoder::useInternalWeakPullResistors=DOWN;
 	// Enable the weak pull up resistors
-	ESP32Encoder::useInternalWeakPullResistors=UP;
-	// set starting count value
+	//ESP32Encoder::useInternalWeakPullResistors=UP;
 
 	// Attache pins for use as encoder pins
 	encoder.attachHalfQuad(12, 13);
