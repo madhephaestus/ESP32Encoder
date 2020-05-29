@@ -10,7 +10,7 @@
 //static ESP32Encoder *gpio2enc[48];
 //
 //
-bool ESP32Encoder::useInternalWeakPullResistors=true;
+bool ESP32Encoder::useInternalWeakPullResistors=DOWN;
 ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, NULL, NULL,
 NULL,
 NULL, NULL, NULL, NULL };
@@ -61,7 +61,7 @@ static void IRAM_ATTR pcnt_example_intr_handler(void *arg) {
 	}
 }
 
-void ESP32Encoder::attach(int a, int b, boolean fq) {
+void ESP32Encoder::attach(int a, int b, enum encType et) {
 	if (attached) {
 		Serial.println("All ready attached, FAIL!");
 		return;
@@ -79,7 +79,7 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 	}
 
 	// Set data now that pin attach checks are done
-	fullQuad = fq;
+	fullQuad = et != single;
 		unit = (pcnt_unit_t) index;
 	this->aPinNumber = (gpio_num_t) a;
 	this->bPinNumber = (gpio_num_t) b;
@@ -89,11 +89,14 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 	gpio_pad_select_gpio(bPinNumber);
 	gpio_set_direction(aPinNumber, GPIO_MODE_INPUT);
 	gpio_set_direction(bPinNumber, GPIO_MODE_INPUT);
-	if(useInternalWeakPullResistors){
+	if(useInternalWeakPullResistors==DOWN){
 		gpio_pulldown_en(aPinNumber);
 		gpio_pulldown_en(bPinNumber);
 	}
-
+	if(useInternalWeakPullResistors==UP){
+		gpio_pullup_en(aPinNumber);
+		gpio_pullup_en(bPinNumber);
+	}
 	// Set up encoder PCNT configuration
 	r_enc_config.pulse_gpio_num = aPinNumber; //Rotary Encoder Chan A
 	r_enc_config.ctrl_gpio_num = bPinNumber;    //Rotary Encoder Chan B
@@ -111,6 +114,44 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 	r_enc_config		.counter_l_lim = INT16_MIN ;
 
 	pcnt_unit_config(&r_enc_config);
+
+	if (et == full) {
+		// set up second channel for full quad
+		r_enc_config.pulse_gpio_num = bPinNumber; //make prior control into signal
+		r_enc_config.ctrl_gpio_num = aPinNumber;    //and prior signal into control
+
+		r_enc_config.unit = unit;
+		r_enc_config.channel = PCNT_CHANNEL_1; // channel 1
+
+		r_enc_config.pos_mode = PCNT_COUNT_DEC; //Count Only On Rising-Edges
+		r_enc_config.neg_mode = PCNT_COUNT_INC;   // Discard Falling-Edge
+
+		r_enc_config.lctrl_mode = PCNT_MODE_REVERSE;    // prior high mode is now low
+		r_enc_config.hctrl_mode = PCNT_MODE_KEEP; // prior low mode is now high
+
+		r_enc_config		.counter_h_lim = INT16_MAX;
+		r_enc_config		.counter_l_lim = INT16_MIN ;
+
+		pcnt_unit_config(&r_enc_config);
+	} else { // make sure channel 1 is not set when not full quad
+		r_enc_config.pulse_gpio_num = bPinNumber; //make prior control into signal
+		r_enc_config.ctrl_gpio_num = aPinNumber;    //and prior signal into control
+
+		r_enc_config.unit = unit;
+		r_enc_config.channel = PCNT_CHANNEL_1; // channel 1
+
+		r_enc_config.pos_mode = PCNT_COUNT_DIS; //disabling channel 1
+		r_enc_config.neg_mode = PCNT_COUNT_DIS;   // disabling channel 1
+
+		r_enc_config.lctrl_mode = PCNT_MODE_DISABLE;    // disabling channel 1
+		r_enc_config.hctrl_mode = PCNT_MODE_DISABLE; // disabling channel 1
+
+		r_enc_config		.counter_h_lim = INT16_MAX;
+		r_enc_config		.counter_l_lim = INT16_MIN ;
+
+		pcnt_unit_config(&r_enc_config);	
+	}
+
 
 	// Filter out bounces and noise
 	pcnt_set_filter_value(unit, 250);  // Filter Runt Pulses
@@ -138,11 +179,14 @@ void ESP32Encoder::attach(int a, int b, boolean fq) {
 }
 
 void ESP32Encoder::attachHalfQuad(int aPintNumber, int bPinNumber) {
-	attach(aPintNumber, bPinNumber, true);
+	attach(aPintNumber, bPinNumber, half);
 
 }
 void ESP32Encoder::attachSingleEdge(int aPintNumber, int bPinNumber) {
-	attach(aPintNumber, bPinNumber, false);
+	attach(aPintNumber, bPinNumber, single);
+}
+void ESP32Encoder::attachFullQuad(int aPintNumber, int bPinNumber) {
+	attach(aPintNumber, bPinNumber, full);
 }
 
 void ESP32Encoder::setCount(int32_t value) {
@@ -169,3 +213,4 @@ int32_t ESP32Encoder::pauseCount() {
 int32_t ESP32Encoder::resumeCount() {
 	return pcnt_counter_resume(unit);
 }
+

@@ -9,8 +9,12 @@ unsigned long encoder2lastToggled;
 bool encoder2Paused = false;
 
 void setup(){
-	Serial.begin(115200);
 	
+	Serial.begin(115200);
+	// Enable the weak pull down resistors
+	ESP32Encoder::useInternalWeakPullResistors=DOWN;
+	// Enable the weak pull up resistors
+	ESP32Encoder::useInternalWeakPullResistors=UP;
 	// set starting count value
 	encoder.setCount(37);
 
@@ -47,3 +51,4 @@ void loop(){
 		encoder2lastToggled = millis();
 	}
 }
+
