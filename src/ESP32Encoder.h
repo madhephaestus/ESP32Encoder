@@ -25,6 +25,9 @@ private:
 	static  pcnt_isr_handle_t user_isr_handle; //user's ISR service handle
     bool direction;
     bool working;
+
+	static bool attachedInterrupt;
+	int64_t getCountRaw();
 public:
 	ESP32Encoder();
 	~ESP32Encoder();
@@ -33,7 +36,6 @@ public:
 	void attachSingleEdge(int aPintNumber, int bPinNumber);
 	//void attachHalfQuad(int aPintNumber, int bPinNumber);
 	int64_t getCount();
-	int64_t getCountRaw();
 	int64_t clearCount();
 	int64_t pauseCount();
 	int64_t resumeCount();
@@ -41,7 +43,6 @@ public:
 	boolean isAttached(){return attached;}
 	void setCount(int64_t value);
 	static ESP32Encoder *encoders[MAX_ESP32_ENCODERS];
-	static bool attachedInterrupt;
 	gpio_num_t aPinNumber;
 	gpio_num_t bPinNumber;
 	pcnt_unit_t unit;

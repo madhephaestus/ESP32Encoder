@@ -165,8 +165,8 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 	pcnt_counter_pause(unit); // Initial PCNT init
 	pcnt_counter_clear(unit);
 	/* Register ISR handler and enable interrupts for PCNT unit */
-	if(ESP32Encoder::attachedInterrupt==false){
-		ESP32Encoder::attachedInterrupt=true;
+	if(attachedInterrupt==false){
+		attachedInterrupt=true;
 		esp_err_t er = pcnt_isr_register(pcnt_example_intr_handler,(void *) NULL, (int)0,
 				(pcnt_isr_handle_t *)&ESP32Encoder::user_isr_handle);
 		if (er != ESP_OK){
