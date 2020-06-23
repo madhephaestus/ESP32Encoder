@@ -3,6 +3,8 @@
 #include <driver/gpio.h>
 #include "driver/pcnt.h"
 #define MAX_ESP32_ENCODERS PCNT_UNIT_MAX
+#define 	_INT16_MAX 32766
+#define  	_INT16_MIN -32766
 
 enum encType {
 single,
@@ -45,7 +47,7 @@ public:
 	pcnt_unit_t unit;
 	bool fullQuad=false;
 	int countsMode = 2;
-	volatile int32_t count=0;
+	volatile int64_t count=0;
 	pcnt_config_t r_enc_config;
 	static enum puType useInternalWeakPullResistors;
 };

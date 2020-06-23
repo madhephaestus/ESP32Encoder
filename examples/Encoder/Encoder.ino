@@ -13,14 +13,14 @@ void setup(){
 	Serial.begin(115200);
 	// Enable the weak pull down resistors
 
-	ESP32Encoder::useInternalWeakPullResistors=DOWN;
+	//ESP32Encoder::useInternalWeakPullResistors=DOWN;
 	// Enable the weak pull up resistors
-	//ESP32Encoder::useInternalWeakPullResistors=UP;
+	ESP32Encoder::useInternalWeakPullResistors=UP;
 
 	// Attache pins for use as encoder pins
-	encoder.attachHalfQuad(12, 13);
+	encoder.attachHalfQuad(19, 18);
 	// Attache pins for use as encoder pins
-	encoder2.attachHalfQuad(2, 15);
+	encoder2.attachHalfQuad(17, 16);
 		
 	// set starting count value after attaching
 	encoder.setCount(37);

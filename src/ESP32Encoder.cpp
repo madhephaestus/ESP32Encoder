@@ -110,8 +110,8 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 	r_enc_config.lctrl_mode = PCNT_MODE_KEEP;    // Rising A on HIGH B = CW Step
 	r_enc_config.hctrl_mode = PCNT_MODE_REVERSE; // Rising A on LOW B = CCW Step
 
-	r_enc_config		.counter_h_lim = INT16_MAX;
-	r_enc_config		.counter_l_lim = INT16_MIN ;
+	r_enc_config		.counter_h_lim = _INT16_MAX;
+	r_enc_config		.counter_l_lim = _INT16_MIN ;
 
 	pcnt_unit_config(&r_enc_config);
 
@@ -129,8 +129,8 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 		r_enc_config.lctrl_mode = PCNT_MODE_REVERSE;    // prior high mode is now low
 		r_enc_config.hctrl_mode = PCNT_MODE_KEEP; // prior low mode is now high
 
-		r_enc_config		.counter_h_lim = INT16_MAX;
-		r_enc_config		.counter_l_lim = INT16_MIN ;
+		r_enc_config		.counter_h_lim = _INT16_MAX;
+		r_enc_config		.counter_l_lim = _INT16_MIN ;
 
 		pcnt_unit_config(&r_enc_config);
 	} else { // make sure channel 1 is not set when not full quad
@@ -146,8 +146,8 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 		r_enc_config.lctrl_mode = PCNT_MODE_DISABLE;    // disabling channel 1
 		r_enc_config.hctrl_mode = PCNT_MODE_DISABLE; // disabling channel 1
 
-		r_enc_config		.counter_h_lim = INT16_MAX;
-		r_enc_config		.counter_l_lim = INT16_MIN ;
+		r_enc_config		.counter_h_lim = _INT16_MAX;
+		r_enc_config		.counter_l_lim = _INT16_MIN ;
 
 		pcnt_unit_config(&r_enc_config);	
 	}
