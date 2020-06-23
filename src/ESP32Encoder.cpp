@@ -47,7 +47,7 @@ static void IRAM_ATTR pcnt_example_intr_handler(void *arg) {
 			/* Save the PCNT event type that caused an interrupt
 			 to pass it to the main program */
 
-			int status=0;
+			int64_t status=0;
 			if(PCNT.status_unit[i].h_lim_lat){
 				status=ptr->r_enc_config.counter_h_lim;
 			}
@@ -189,28 +189,28 @@ void ESP32Encoder::attachFullQuad(int aPintNumber, int bPinNumber) {
 	attach(aPintNumber, bPinNumber, full);
 }
 
-void ESP32Encoder::setCount(int32_t value) {
+void ESP32Encoder::setCount(int64_t value) {
 	count = value - getCountRaw();
 }
-int32_t ESP32Encoder::getCountRaw() {
+int64_t ESP32Encoder::getCountRaw() {
 	int16_t c;
 	pcnt_get_counter_value(unit, &c);
 	return c;
 }
-int32_t ESP32Encoder::getCount() {
+int64_t ESP32Encoder::getCount() {
 	return getCountRaw() + count;
 }
 
-int32_t ESP32Encoder::clearCount() {
+int64_t ESP32Encoder::clearCount() {
 	count = 0;
 	return pcnt_counter_clear(unit);
 }
 
-int32_t ESP32Encoder::pauseCount() {
+int64_t ESP32Encoder::pauseCount() {
 	return pcnt_counter_pause(unit);
 }
 
-int32_t ESP32Encoder::resumeCount() {
+int64_t ESP32Encoder::resumeCount() {
 	return pcnt_counter_resume(unit);
 }
 

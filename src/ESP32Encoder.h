@@ -32,14 +32,14 @@ public:
 	void attachFullQuad(int aPintNumber, int bPinNumber);
 	void attachSingleEdge(int aPintNumber, int bPinNumber);
 	//void attachHalfQuad(int aPintNumber, int bPinNumber);
-	int32_t getCount();
-	int32_t getCountRaw();
-	int32_t clearCount();
-	int32_t pauseCount();
-	int32_t resumeCount();
+	int64_t getCount();
+	int64_t getCountRaw();
+	int64_t clearCount();
+	int64_t pauseCount();
+	int64_t resumeCount();
 
 	boolean isAttached(){return attached;}
-	void setCount(int32_t value);
+	void setCount(int64_t value);
 	static ESP32Encoder *encoders[MAX_ESP32_ENCODERS];
 	static bool attachedInterrupt;
 	gpio_num_t aPinNumber;
