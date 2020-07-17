@@ -1,0 +1,9 @@
+<map id="setup" name="setup">
+<area shape="rect" id="node2" href="$classESP32Encoder.html#af2c812c451933aa6c41c546e44c6cb1d" title="ESP32Encoder::attachHalfQuad" alt="" coords="108,5,319,32"/>
+<area shape="rect" id="node5" href="$classESP32Encoder.html#af8397b2a6a040b66e0fdfeed67f35272" title="ESP32Encoder::clearCount" alt="" coords="122,56,305,83"/>
+<area shape="rect" id="node6" href="$classESP32Encoder.html#ab555afb955fbfb2446b525a64c1efbb1" title="ESP32Encoder::getCount" alt="" coords="127,107,299,133"/>
+<area shape="rect" id="node8" href="$classESP32Encoder.html#ace023e5b010634512ffef0e8ec23ae3e" title="ESP32Encoder::setCount" alt="" coords="127,157,299,184"/>
+<area shape="rect" id="node3" href="$classESP32Encoder.html#a02e94893cd5eb05a2b7217336d555c0f" title="ESP32Encoder::attach" alt="" coords="389,5,543,32"/>
+<area shape="rect" id="node4" href="$ESP32Encoder_8cpp.html#a50f68452625a60574fc06aa2128f0b94" title="pcnt_example_intr_handler" alt="" coords="613,5,791,32"/>
+<area shape="rect" id="node7" href="$classESP32Encoder.html#aa408a8969aa799cf2e96413ee0a65080" title="ESP32Encoder::getCountRaw" alt="" coords="367,132,565,159"/>
+</map>

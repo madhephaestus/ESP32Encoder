@@ -1,0 +1,6 @@
+<map id="loop" name="loop">
+<area shape="rect" id="node2" href="$classESP32Encoder.html#ab555afb955fbfb2446b525a64c1efbb1" title="ESP32Encoder::getCount" alt="" coords="113,5,285,32"/>
+<area shape="rect" id="node4" href="$classESP32Encoder.html#a0f61ada0e9bcc8c404643950f1062afb" title="ESP32Encoder::pauseCount" alt="" coords="104,56,293,83"/>
+<area shape="rect" id="node5" href="$classESP32Encoder.html#a6db0fb11290d36f129716d019c8626d4" title="ESP32Encoder::resumeCount" alt="" coords="100,107,297,133"/>
+<area shape="rect" id="node3" href="$classESP32Encoder.html#aa408a8969aa799cf2e96413ee0a65080" title="ESP32Encoder::getCountRaw" alt="" coords="345,5,544,32"/>
+</map>
