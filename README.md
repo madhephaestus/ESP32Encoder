@@ -8,7 +8,7 @@ There is only one interrupt for the peripheral, and that is managed by the libra
 
 # Documentation by Doxygen
 
-[ESP32Encoder Doxygen](https://madhephaestus.github.io/ESP32Encoder/annotated.html)
+[ESP32Encoder Doxygen](https://madhephaestus.github.io/ESP32Encoder/files.html)
 
 
 ## Pull Downs
