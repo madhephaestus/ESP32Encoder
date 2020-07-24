@@ -28,7 +28,6 @@ ESP32Encoder::ESP32Encoder() {
 }
 
 ESP32Encoder::~ESP32Encoder() {
-	// TODO Auto-generated destructor stub
 }
 
 /* Decode what PCNT's unit originated an interrupt
@@ -63,7 +62,7 @@ static void IRAM_ATTR pcnt_example_intr_handler(void *arg) {
 
 void ESP32Encoder::attach(int a, int b, enum encType et) {
 	if (attached) {
-		Serial.println("All ready attached, FAIL!");
+		Serial.println("Already attached, FAIL!");
 		return;
 	}
 	int index = 0;
@@ -158,7 +157,7 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 	pcnt_filter_enable(unit);
 
 
-	/* Enable events on  maximum and minimum limit values */
+	/* Enable events on maximum and minimum limit values */
 	pcnt_event_enable(unit, PCNT_EVT_H_LIM);
 	pcnt_event_enable(unit, PCNT_EVT_L_LIM);
 
@@ -170,7 +169,7 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 		esp_err_t er = pcnt_isr_register(pcnt_example_intr_handler,(void *) NULL, (int)0,
 				(pcnt_isr_handle_t *)&ESP32Encoder::user_isr_handle);
 		if (er != ESP_OK){
-			Serial.println("Encoder wrap interupt failed");
+			Serial.println("Encoder wrap interrupt failed");
 		}
 	}
 	pcnt_intr_enable(unit);
