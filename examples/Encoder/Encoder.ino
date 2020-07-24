@@ -1,4 +1,3 @@
-
 #include <ESP32Encoder.h>
 
 ESP32Encoder encoder;
@@ -17,9 +16,9 @@ void setup(){
 	// Enable the weak pull up resistors
 	ESP32Encoder::useInternalWeakPullResistors=UP;
 
-	// Attache pins for use as encoder pins
+	// use pin 19 and 18 for the first encoder
 	encoder.attachHalfQuad(19, 18);
-	// Attache pins for use as encoder pins
+	// use pin 17 and 16 for the second encoder
 	encoder2.attachHalfQuad(17, 16);
 		
 	// set starting count value after attaching
@@ -27,14 +26,14 @@ void setup(){
 
 	// clear the encoder's raw count and set the tracked count to zero
 	encoder2.clearCount();
-	Serial.println("Encoder Start = "+String((int32_t)encoder.getCount()));
+	Serial.println("Encoder Start = " + String((int32_t)encoder.getCount()));
 	// set the lastToggle
 	encoder2lastToggled = millis();
 }
 
 void loop(){
 	// Loop and read the count
-	Serial.println("Encoder count = "+String((int32_t)encoder.getCount())+" "+String((int32_t)encoder2.getCount()));
+	Serial.println("Encoder count = " + String((int32_t)encoder.getCount()) + " " + String((int32_t)encoder2.getCount()));
 	delay(100);
 
 	// every 5 seconds toggle encoder 2
