@@ -1,5 +1,8 @@
 # ESP32Encoder
 
+[![Build Status](https://travis-ci.com/madhephaestus/ESP32Encoder.svg?branch=master)](https://travis-ci.com/github/madhephaestus/ESP32Encoder)
+
+
 ESP32Encoder library that uses the ESP32 pulse counter hardware peripheral:
 
 https://docs.espressif.com/projects/esp-idf/en/latest/api-reference/peripherals/pcnt.html
