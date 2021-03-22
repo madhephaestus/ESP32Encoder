@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
 #include <driver/gpio.h>
-#include "driver/pcnt.h"
+#include <driver/pcnt.h>
 #define MAX_ESP32_ENCODERS PCNT_UNIT_MAX
 #define 	_INT16_MAX 32766
 #define  	_INT16_MIN -32766
@@ -41,6 +41,7 @@ public:
 
 	boolean isAttached(){return attached;}
 	void setCount(int64_t value);
+	void setFilter(uint16_t value);
 	static ESP32Encoder *encoders[MAX_ESP32_ENCODERS];
 	gpio_num_t aPinNumber;
 	gpio_num_t bPinNumber;

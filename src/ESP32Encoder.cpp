@@ -12,8 +12,8 @@
 //
 enum puType ESP32Encoder::useInternalWeakPullResistors=DOWN;
 ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, NULL, NULL,
-NULL,
-NULL, NULL, NULL, NULL };
+	NULL,
+	NULL, NULL, NULL, NULL };
 
 bool ESP32Encoder::attachedInterrupt=false;
 pcnt_isr_handle_t ESP32Encoder::user_isr_handle = NULL;
@@ -153,9 +153,7 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 
 
 	// Filter out bounces and noise
-	pcnt_set_filter_value(unit, 250);  // Filter Runt Pulses
-	pcnt_filter_enable(unit);
-
+	setFilter(250); // Filter Runt Pulses
 
 	/* Enable events on maximum and minimum limit values */
 	pcnt_event_enable(unit, PCNT_EVT_H_LIM);
@@ -213,3 +211,12 @@ int64_t ESP32Encoder::resumeCount() {
 	return pcnt_counter_resume(unit);
 }
 
+void ESP32Encoder::setFilter(uint16_t value) {
+	if(value==0) {
+		pcnt_filter_disable(unit);	
+	} else {
+		pcnt_set_filter_value(unit, value);
+		pcnt_filter_enable(unit);	
+	}
+	
+}
