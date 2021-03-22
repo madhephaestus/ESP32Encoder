@@ -101,6 +101,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad3c7e969eecb7f885604aa95928c3cba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace023e5b010634512ffef0e8ec23ae3e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32Encoder.html#ace023e5b010634512ffef0e8ec23ae3e">setCount</a> (int64_t value)</td></tr>
 <tr class="separator:ace023e5b010634512ffef0e8ec23ae3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3cecb7d572685b3195f8a13409b3390"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32Encoder.html#ae3cecb7d572685b3195f8a13409b3390">setFilter</a> (uint16_t value)</td></tr>
+<tr class="separator:ae3cecb7d572685b3195f8a13409b3390"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
@@ -234,17 +236,18 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00064">64</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00063">63</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="ESP32Encoder_8h_source.html#l00006">_INT16_MAX</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00007">_INT16_MIN</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00046">aPinNumber</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00022">attached</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00029">attachedInterrupt</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00047">bPinNumber</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00016">DOWN</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00045">encoders</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00012">full</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00049">fullQuad</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00005">MAX_ESP32_ENCODERS</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00038">pcnt_example_intr_handler()</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00052">r_enc_config</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00010">single</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00048">unit</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00015">UP</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00053">useInternalWeakPullResistors</a>, and <a class="el" href="ESP32Encoder_8h_source.html#l00025">user_isr_handle</a>.</p>
+<p class="reference">References <a class="el" href="ESP32Encoder_8h_source.html#l00006">_INT16_MAX</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00007">_INT16_MIN</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00046">aPinNumber</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00022">attached</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00029">attachedInterrupt</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00047">bPinNumber</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00016">DOWN</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00045">encoders</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00012">full</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00049">fullQuad</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00005">MAX_ESP32_ENCODERS</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00037">pcnt_example_intr_handler()</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00052">r_enc_config</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00214">setFilter()</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00010">single</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00048">unit</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00015">UP</a>, <a class="el" href="ESP32Encoder_8h_source.html#l00053">useInternalWeakPullResistors</a>, and <a class="el" href="ESP32Encoder_8h_source.html#l00025">user_isr_handle</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00188">attachFullQuad()</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00181">attachHalfQuad()</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00185">attachSingleEdge()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00185">attachFullQuad()</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00178">attachHalfQuad()</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00182">attachSingleEdge()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classESP32Encoder_a02e94893cd5eb05a2b7217336d555c0f_cgraph.png" border="0" usemap="#classESP32Encoder_a02e94893cd5eb05a2b7217336d555c0f_cgraph" alt=""/></div>
 <map name="classESP32Encoder_a02e94893cd5eb05a2b7217336d555c0f_cgraph" id="classESP32Encoder_a02e94893cd5eb05a2b7217336d555c0f_cgraph">
 <area shape="rect" id="node2" href="ESP32Encoder_8cpp.html#a50f68452625a60574fc06aa2128f0b94" title="pcnt_example_intr_handler" alt="" coords="208,5,385,32"/>
+<area shape="rect" id="node3" href="classESP32Encoder.html#ae3cecb7d572685b3195f8a13409b3390" title="ESP32Encoder::setFilter" alt="" coords="213,56,380,83"/>
 </map>
 </div>
 
@@ -276,16 +279,17 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00188">188</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00185">185</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="ESP32Encoder_8cpp_source.html#l00064">attach()</a>, and <a class="el" href="ESP32Encoder_8h_source.html#l00012">full</a>.</p>
+<p class="reference">References <a class="el" href="ESP32Encoder_8cpp_source.html#l00063">attach()</a>, and <a class="el" href="ESP32Encoder_8h_source.html#l00012">full</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classESP32Encoder_a56b92fd3632482a70eeb659fe11e79b8_cgraph.png" border="0" usemap="#classESP32Encoder_a56b92fd3632482a70eeb659fe11e79b8_cgraph" alt=""/></div>
 <map name="classESP32Encoder_a56b92fd3632482a70eeb659fe11e79b8_cgraph" id="classESP32Encoder_a56b92fd3632482a70eeb659fe11e79b8_cgraph">
-<area shape="rect" id="node2" href="classESP32Encoder.html#a02e94893cd5eb05a2b7217336d555c0f" title="ESP32Encoder::attach" alt="" coords="260,5,415,32"/>
+<area shape="rect" id="node2" href="classESP32Encoder.html#a02e94893cd5eb05a2b7217336d555c0f" title="ESP32Encoder::attach" alt="" coords="260,31,415,57"/>
 <area shape="rect" id="node3" href="ESP32Encoder_8cpp.html#a50f68452625a60574fc06aa2128f0b94" title="pcnt_example_intr_handler" alt="" coords="463,5,640,32"/>
+<area shape="rect" id="node4" href="classESP32Encoder.html#ae3cecb7d572685b3195f8a13409b3390" title="ESP32Encoder::setFilter" alt="" coords="468,56,635,83"/>
 </map>
 </div>
 
@@ -317,18 +321,19 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00181">181</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00178">178</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="ESP32Encoder_8cpp_source.html#l00064">attach()</a>, and <a class="el" href="ESP32Encoder_8h_source.html#l00011">half</a>.</p>
+<p class="reference">References <a class="el" href="ESP32Encoder_8cpp_source.html#l00063">attach()</a>, and <a class="el" href="ESP32Encoder_8h_source.html#l00011">half</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Encoder_8ino_source.html#l00011">setup()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Encoder_8ino_source.html#l00010">setup()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classESP32Encoder_af2c812c451933aa6c41c546e44c6cb1d_cgraph.png" border="0" usemap="#classESP32Encoder_af2c812c451933aa6c41c546e44c6cb1d_cgraph" alt=""/></div>
 <map name="classESP32Encoder_af2c812c451933aa6c41c546e44c6cb1d_cgraph" id="classESP32Encoder_af2c812c451933aa6c41c546e44c6cb1d_cgraph">
-<area shape="rect" id="node2" href="classESP32Encoder.html#a02e94893cd5eb05a2b7217336d555c0f" title="ESP32Encoder::attach" alt="" coords="264,5,419,32"/>
+<area shape="rect" id="node2" href="classESP32Encoder.html#a02e94893cd5eb05a2b7217336d555c0f" title="ESP32Encoder::attach" alt="" coords="264,31,419,57"/>
 <area shape="rect" id="node3" href="ESP32Encoder_8cpp.html#a50f68452625a60574fc06aa2128f0b94" title="pcnt_example_intr_handler" alt="" coords="467,5,644,32"/>
+<area shape="rect" id="node4" href="classESP32Encoder.html#ae3cecb7d572685b3195f8a13409b3390" title="ESP32Encoder::setFilter" alt="" coords="472,56,639,83"/>
 </map>
 </div>
 
@@ -360,16 +365,17 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00185">185</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00182">182</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="ESP32Encoder_8cpp_source.html#l00064">attach()</a>, and <a class="el" href="ESP32Encoder_8h_source.html#l00010">single</a>.</p>
+<p class="reference">References <a class="el" href="ESP32Encoder_8cpp_source.html#l00063">attach()</a>, and <a class="el" href="ESP32Encoder_8h_source.html#l00010">single</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classESP32Encoder_ac565f0e078a89ab9ddcd8b6890365751_cgraph.png" border="0" usemap="#classESP32Encoder_ac565f0e078a89ab9ddcd8b6890365751_cgraph" alt=""/></div>
 <map name="classESP32Encoder_ac565f0e078a89ab9ddcd8b6890365751_cgraph" id="classESP32Encoder_ac565f0e078a89ab9ddcd8b6890365751_cgraph">
-<area shape="rect" id="node2" href="classESP32Encoder.html#a02e94893cd5eb05a2b7217336d555c0f" title="ESP32Encoder::attach" alt="" coords="275,5,429,32"/>
+<area shape="rect" id="node2" href="classESP32Encoder.html#a02e94893cd5eb05a2b7217336d555c0f" title="ESP32Encoder::attach" alt="" coords="275,31,429,57"/>
 <area shape="rect" id="node3" href="ESP32Encoder_8cpp.html#a50f68452625a60574fc06aa2128f0b94" title="pcnt_example_intr_handler" alt="" coords="477,5,655,32"/>
+<area shape="rect" id="node4" href="classESP32Encoder.html#ae3cecb7d572685b3195f8a13409b3390" title="ESP32Encoder::setFilter" alt="" coords="483,56,649,83"/>
 </map>
 </div>
 
@@ -390,11 +396,11 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00204">204</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00201">201</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
 
 <p class="reference">References <a class="el" href="ESP32Encoder_8h_source.html#l00051">count</a>, and <a class="el" href="ESP32Encoder_8h_source.html#l00048">unit</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Encoder_8ino_source.html#l00011">setup()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Encoder_8ino_source.html#l00010">setup()</a>.</p>
 
 </div>
 </div>
@@ -413,11 +419,11 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00200">200</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00197">197</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="ESP32Encoder_8h_source.html#l00051">count</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00195">getCountRaw()</a>.</p>
+<p class="reference">References <a class="el" href="ESP32Encoder_8h_source.html#l00051">count</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00192">getCountRaw()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Encoder_8ino_source.html#l00035">loop()</a>, and <a class="el" href="Encoder_8ino_source.html#l00011">setup()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Encoder_8ino_source.html#l00034">loop()</a>, and <a class="el" href="Encoder_8ino_source.html#l00010">setup()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -452,11 +458,11 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00195">195</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00192">192</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
 
 <p class="reference">References <a class="el" href="ESP32Encoder_8h_source.html#l00048">unit</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00200">getCount()</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00192">setCount()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00197">getCount()</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00189">setCount()</a>.</p>
 
 </div>
 </div>
@@ -483,15 +489,16 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8h_source.html#l00043">43</a> of file <a class="el" href="ESP32Encoder_8h_source.html">ESP32Encoder.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8h_source.html#l00042">42</a> of file <a class="el" href="ESP32Encoder_8h_source.html">ESP32Encoder.h</a>.</p>
 
-<p class="reference">References <a class="el" href="ESP32Encoder_8h_source.html#l00022">attached</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00192">setCount()</a>.</p>
+<p class="reference">References <a class="el" href="ESP32Encoder_8h_source.html#l00022">attached</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00189">setCount()</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00214">setFilter()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classESP32Encoder_ad3c7e969eecb7f885604aa95928c3cba_cgraph.png" border="0" usemap="#classESP32Encoder_ad3c7e969eecb7f885604aa95928c3cba_cgraph" alt=""/></div>
 <map name="classESP32Encoder_ad3c7e969eecb7f885604aa95928c3cba_cgraph" id="classESP32Encoder_ad3c7e969eecb7f885604aa95928c3cba_cgraph">
 <area shape="rect" id="node2" href="classESP32Encoder.html#ace023e5b010634512ffef0e8ec23ae3e" title="ESP32Encoder::setCount" alt="" coords="235,5,407,32"/>
+<area shape="rect" id="node4" href="classESP32Encoder.html#ae3cecb7d572685b3195f8a13409b3390" title="ESP32Encoder::setFilter" alt="" coords="237,56,404,83"/>
 <area shape="rect" id="node3" href="classESP32Encoder.html#aa408a8969aa799cf2e96413ee0a65080" title="ESP32Encoder::getCountRaw" alt="" coords="455,5,653,32"/>
 </map>
 </div>
@@ -513,11 +520,11 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00209">209</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00206">206</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
 
 <p class="reference">References <a class="el" href="ESP32Encoder_8h_source.html#l00048">unit</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Encoder_8ino_source.html#l00035">loop()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Encoder_8ino_source.html#l00034">loop()</a>.</p>
 
 </div>
 </div>
@@ -536,11 +543,11 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00213">213</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00210">210</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
 
 <p class="reference">References <a class="el" href="ESP32Encoder_8h_source.html#l00048">unit</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Encoder_8ino_source.html#l00035">loop()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Encoder_8ino_source.html#l00034">loop()</a>.</p>
 
 </div>
 </div>
@@ -560,11 +567,11 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00192">192</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00189">189</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="ESP32Encoder_8h_source.html#l00051">count</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00195">getCountRaw()</a>.</p>
+<p class="reference">References <a class="el" href="ESP32Encoder_8h_source.html#l00051">count</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00192">getCountRaw()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8h_source.html#l00043">isAttached()</a>, and <a class="el" href="Encoder_8ino_source.html#l00011">setup()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8h_source.html#l00042">isAttached()</a>, and <a class="el" href="Encoder_8ino_source.html#l00010">setup()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -573,6 +580,30 @@ Here is the call graph for this function:</div>
 <area shape="rect" id="node2" href="classESP32Encoder.html#aa408a8969aa799cf2e96413ee0a65080" title="ESP32Encoder::getCountRaw" alt="" coords="225,5,424,32"/>
 </map>
 </div>
+
+</div>
+</div>
+<a id="ae3cecb7d572685b3195f8a13409b3390"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3cecb7d572685b3195f8a13409b3390">&#9670;&nbsp;</a></span>setFilter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ESP32Encoder::setFilter </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ESP32Encoder_8cpp_source.html#l00214">214</a> of file <a class="el" href="ESP32Encoder_8cpp_source.html">ESP32Encoder.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="ESP32Encoder_8h_source.html#l00048">unit</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00063">attach()</a>, and <a class="el" href="ESP32Encoder_8h_source.html#l00042">isAttached()</a>.</p>
 
 </div>
 </div>
@@ -591,7 +622,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Encoder_8h_source.html#l00046">46</a> of file <a class="el" href="ESP32Encoder_8h_source.html">ESP32Encoder.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00064">attach()</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00021">ESP32Encoder()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00063">attach()</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00021">ESP32Encoder()</a>.</p>
 
 </div>
 </div>
@@ -617,7 +648,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Encoder_8h_source.html#l00022">22</a> of file <a class="el" href="ESP32Encoder_8h_source.html">ESP32Encoder.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00064">attach()</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00021">ESP32Encoder()</a>, and <a class="el" href="ESP32Encoder_8h_source.html#l00043">isAttached()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00063">attach()</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00021">ESP32Encoder()</a>, and <a class="el" href="ESP32Encoder_8h_source.html#l00042">isAttached()</a>.</p>
 
 </div>
 </div>
@@ -643,7 +674,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Encoder_8h_source.html#l00029">29</a> of file <a class="el" href="ESP32Encoder_8h_source.html">ESP32Encoder.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00064">attach()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00063">attach()</a>.</p>
 
 </div>
 </div>
@@ -661,7 +692,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Encoder_8h_source.html#l00047">47</a> of file <a class="el" href="ESP32Encoder_8h_source.html">ESP32Encoder.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00064">attach()</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00021">ESP32Encoder()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00063">attach()</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00021">ESP32Encoder()</a>.</p>
 
 </div>
 </div>
@@ -679,7 +710,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Encoder_8h_source.html#l00051">51</a> of file <a class="el" href="ESP32Encoder_8h_source.html">ESP32Encoder.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00204">clearCount()</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00200">getCount()</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00038">pcnt_example_intr_handler()</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00192">setCount()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00201">clearCount()</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00197">getCount()</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00037">pcnt_example_intr_handler()</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00189">setCount()</a>.</p>
 
 </div>
 </div>
@@ -744,10 +775,10 @@ Here is the call graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= { NULL, NULL, NULL,</div><div class="line">NULL,</div><div class="line">NULL, NULL, NULL, NULL }</div></div><!-- fragment -->
+<b>Initial value:</b><div class="fragment"><div class="line">= { NULL, NULL, NULL,</div><div class="line">    NULL,</div><div class="line">    NULL, NULL, NULL, NULL }</div></div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="ESP32Encoder_8h_source.html#l00045">45</a> of file <a class="el" href="ESP32Encoder_8h_source.html">ESP32Encoder.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00064">attach()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00063">attach()</a>.</p>
 
 </div>
 </div>
@@ -765,7 +796,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Encoder_8h_source.html#l00049">49</a> of file <a class="el" href="ESP32Encoder_8h_source.html">ESP32Encoder.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00064">attach()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00063">attach()</a>.</p>
 
 </div>
 </div>
@@ -783,7 +814,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Encoder_8h_source.html#l00052">52</a> of file <a class="el" href="ESP32Encoder_8h_source.html">ESP32Encoder.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00064">attach()</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00038">pcnt_example_intr_handler()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00063">attach()</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00037">pcnt_example_intr_handler()</a>.</p>
 
 </div>
 </div>
@@ -801,7 +832,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Encoder_8h_source.html#l00048">48</a> of file <a class="el" href="ESP32Encoder_8h_source.html">ESP32Encoder.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00064">attach()</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00204">clearCount()</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00021">ESP32Encoder()</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00195">getCountRaw()</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00209">pauseCount()</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00213">resumeCount()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00063">attach()</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00201">clearCount()</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00021">ESP32Encoder()</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00192">getCountRaw()</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00206">pauseCount()</a>, <a class="el" href="ESP32Encoder_8cpp_source.html#l00210">resumeCount()</a>, and <a class="el" href="ESP32Encoder_8cpp_source.html#l00214">setFilter()</a>.</p>
 
 </div>
 </div>
@@ -827,7 +858,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Encoder_8h_source.html#l00053">53</a> of file <a class="el" href="ESP32Encoder_8h_source.html">ESP32Encoder.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00064">attach()</a>, and <a class="el" href="Encoder_8ino_source.html#l00011">setup()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00063">attach()</a>, and <a class="el" href="Encoder_8ino_source.html#l00010">setup()</a>.</p>
 
 </div>
 </div>
@@ -853,7 +884,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Encoder_8h_source.html#l00025">25</a> of file <a class="el" href="ESP32Encoder_8h_source.html">ESP32Encoder.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00064">attach()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ESP32Encoder_8cpp_source.html#l00063">attach()</a>.</p>
 
 </div>
 </div>
