@@ -12,8 +12,8 @@
 //
 enum puType ESP32Encoder::useInternalWeakPullResistors=DOWN;
 ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, NULL, NULL,
-NULL,
-NULL, NULL, NULL, NULL };
+	NULL,
+	NULL, NULL, NULL, NULL };
 
 bool ESP32Encoder::attachedInterrupt=false;
 pcnt_isr_handle_t ESP32Encoder::user_isr_handle = NULL;
@@ -215,7 +215,7 @@ void ESP32Encoder::setFilter(uint16_t value) {
 	if(value==0) {
 		pcnt_filter_disable(unit);	
 	} else {
-		pcnt_set_filter_value(unit, value);  // Filter Runt Pulses
+		pcnt_set_filter_value(unit, value);
 		pcnt_filter_enable(unit);	
 	}
 	
