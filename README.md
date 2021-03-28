@@ -14,9 +14,9 @@ There is only one interrupt for the peripheral, and that is managed by the libra
 [ESP32Encoder Doxygen](https://madhephaestus.github.io/ESP32Encoder/classESP32Encoder.html)
 
 
-## Pull Downs
+## Pull Downs/Ups
 
-The 2 encoder pins have an internal weak pull down. This is to prevent erroneous ticking when disconnected. 
+To specify the weak pull resistor set the value [useInternalWeakPullResistors](https://madhephaestus.github.io/ESP32Encoder/classESP32Encoder.html#a53dc40c9de240e90a55b427b32da451f) with the enum types [UP, DOWN, or NONE](https://madhephaestus.github.io/ESP32Encoder/ESP32Encoder_8h.html#adca399663765c125d26e6f2896b5b349)
 
 # A note on KY-040 and similar
 
