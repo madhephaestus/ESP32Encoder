@@ -212,6 +212,7 @@ int64_t ESP32Encoder::resumeCount() {
 }
 
 void ESP32Encoder::setFilter(uint16_t value) {
+	if(value>1023)value=1023;
 	if(value==0) {
 		pcnt_filter_disable(unit);	
 	} else {
