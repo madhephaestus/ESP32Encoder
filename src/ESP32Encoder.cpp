@@ -6,6 +6,8 @@
  */
 
 #include <ESP32Encoder.h>
+#include <soc/pcnt_struct.h>
+
 
 //static ESP32Encoder *gpio2enc[48];
 //
