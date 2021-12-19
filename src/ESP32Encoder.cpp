@@ -59,7 +59,11 @@ static void IRAM_ATTR pcnt_example_intr_handler(void *arg) {
 		}
 	}
 }
+void ESP32Encoder::detatch(){
+	pcnt_counter_pause(unit);
+	ESP32Encoder::encoders[unit]=NULL;
 
+}
 void ESP32Encoder::attach(int a, int b, enum encType et) {
 	if (attached) {
 		Serial.println("Already attached, FAIL!");

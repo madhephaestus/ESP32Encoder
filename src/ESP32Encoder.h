@@ -38,7 +38,7 @@ public:
 	int64_t clearCount();
 	int64_t pauseCount();
 	int64_t resumeCount();
-
+	void detatch();
 	boolean isAttached(){return attached;}
 	void setCount(int64_t value);
 	static ESP32Encoder *encoders[MAX_ESP32_ENCODERS];
