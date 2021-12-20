@@ -13,9 +13,7 @@
 //
 //
 enum puType ESP32Encoder::useInternalWeakPullResistors=DOWN;
-ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, NULL, NULL,
-	NULL,
-	NULL, NULL, NULL, NULL };
+ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL };
 
 bool ESP32Encoder::attachedInterrupt=false;
 pcnt_isr_handle_t ESP32Encoder::user_isr_handle = NULL;
