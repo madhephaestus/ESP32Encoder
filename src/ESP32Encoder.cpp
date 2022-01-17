@@ -13,9 +13,7 @@
 //
 //
 enum puType ESP32Encoder::useInternalWeakPullResistors=DOWN;
-ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, NULL, NULL,
-	NULL,
-	NULL, NULL, NULL, NULL };
+ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, };
 
 bool ESP32Encoder::attachedInterrupt=false;
 pcnt_isr_handle_t ESP32Encoder::user_isr_handle = NULL;
@@ -36,6 +34,13 @@ ESP32Encoder::~ESP32Encoder() {
  * and pass this information together with the event type
  * the main program using a queue.
  */
+#ifdef CONFIG_IDF_TARGET_ESP32S2
+	#define COUNTER_H_LIM cnt_thr_h_lim_lat_un
+	#define COUNTER_L_LIM cnt_thr_l_lim_lat_un
+#else
+	#define COUNTER_H_LIM h_lim_lat
+	#define COUNTER_L_LIM l_lim_lat
+#endif
 static void IRAM_ATTR pcnt_example_intr_handler(void *arg) {
 	ESP32Encoder * ptr;
 
@@ -49,10 +54,10 @@ static void IRAM_ATTR pcnt_example_intr_handler(void *arg) {
 			 to pass it to the main program */
 
 			int64_t status=0;
-			if(PCNT.status_unit[i].h_lim_lat){
+			if(PCNT.status_unit[i].COUNTER_H_LIM){
 				status=ptr->r_enc_config.counter_h_lim;
 			}
-			if(PCNT.status_unit[i].l_lim_lat){
+			if(PCNT.status_unit[i].COUNTER_L_LIM){
 				status=ptr->r_enc_config.counter_l_lim;
 			}
 			//pcnt_counter_clear(ptr->unit);
