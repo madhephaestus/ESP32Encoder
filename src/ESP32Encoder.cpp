@@ -39,7 +39,7 @@ ESP32Encoder::~ESP32Encoder() {
 	#define COUNTER_L_LIM cnt_thr_l_lim_lat_un
 #else
 	#define COUNTER_H_LIM h_lim_lat
-	#define COUNTER_L_LIM counter_l_lim
+	#define COUNTER_L_LIM l_lim_lat
 #endif
 static void IRAM_ATTR pcnt_example_intr_handler(void *arg) {
 	ESP32Encoder * ptr;
