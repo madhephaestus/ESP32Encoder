@@ -17,19 +17,8 @@ DOWN,
 NONE
 };
 class ESP32Encoder {
-private:
-	void attach(int aPintNumber, int bPinNumber, enum encType et);
-	boolean attached=false;
-
-
-	static  pcnt_isr_handle_t user_isr_handle; //user's ISR service handle
-    bool direction;
-    bool working;
-
-	static bool attachedInterrupt;
-	int64_t getCountRaw();
 public:
-	ESP32Encoder();
+	ESP32Encoder(bool always_interrupt=false);
 	~ESP32Encoder();
 	void attachHalfQuad(int aPintNumber, int bPinNumber);
 	void attachFullQuad(int aPintNumber, int bPinNumber);
@@ -43,6 +32,7 @@ public:
 	void setCount(int64_t value);
 	void setFilter(uint16_t value);
 	static ESP32Encoder *encoders[MAX_ESP32_ENCODERS];
+	bool always_interrupt;
 	gpio_num_t aPinNumber;
 	gpio_num_t bPinNumber;
 	pcnt_unit_t unit;
@@ -51,6 +41,15 @@ public:
 	volatile int64_t count=0;
 	pcnt_config_t r_enc_config;
 	static enum puType useInternalWeakPullResistors;
+
+private:
+	static  pcnt_isr_handle_t user_isr_handle;
+	static bool attachedInterrupt;
+	void attach(int aPintNumber, int bPinNumber, enum encType et);
+	int64_t getCountRaw();
+	bool attached;
+  bool direction;
+  bool working;
 };
 
 //Added by Sloeber 

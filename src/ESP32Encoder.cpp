@@ -7,6 +7,9 @@
 
 #include <ESP32Encoder.h>
 #include <soc/pcnt_struct.h>
+#include "esp_log.h"
+
+static const char* TAG = "ESP32Encoder";
 
 
 //static ESP32Encoder *gpio2enc[48];
@@ -18,17 +21,18 @@ ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, };
 bool ESP32Encoder::attachedInterrupt=false;
 pcnt_isr_handle_t ESP32Encoder::user_isr_handle = NULL;
 
-ESP32Encoder::ESP32Encoder() {
-	attached = false;
-	aPinNumber = (gpio_num_t) 0;
-	bPinNumber = (gpio_num_t) 0;
-	working = false;
-	direction = false;
-	unit = (pcnt_unit_t) -1;
+ESP32Encoder::ESP32Encoder(bool always_interrupt_):
+	always_interrupt{always_interrupt_},
+	aPinNumber{(gpio_num_t) 0},
+	bPinNumber{(gpio_num_t) 0},
+	unit{(pcnt_unit_t) -1},
+	attached{false},
+	direction{false},
+	working{false}
+{
 }
 
-ESP32Encoder::~ESP32Encoder() {
-}
+ESP32Encoder::~ESP32Encoder() {}
 
 /* Decode what PCNT's unit originated an interrupt
  * and pass this information together with the event type
@@ -41,28 +45,38 @@ ESP32Encoder::~ESP32Encoder() {
 	#define COUNTER_H_LIM h_lim_lat
 	#define COUNTER_L_LIM l_lim_lat
 #endif
-static void IRAM_ATTR pcnt_example_intr_handler(void *arg) {
-	ESP32Encoder * ptr;
-
+static void IRAM_ATTR esp32encoder_pcnt_intr_handler(void *arg) {
+	ESP_LOGD(TAG, "ISR");
+	static bool leds = false;
+	digitalWrite(LED_BUILTIN, (int)leds);
+	leds = !leds;
+	ESP32Encoder * ptr = {};
 	uint32_t intr_status = PCNT.int_st.val;
 	int i;
 
 	for (i = 0; i < PCNT_UNIT_MAX; i++) {
 		if (intr_status & (BIT(i))) {
+			pcnt_unit_t unit = static_cast<pcnt_unit_t>(i);
 			ptr = ESP32Encoder::encoders[i];
 			/* Save the PCNT event type that caused an interrupt
 			 to pass it to the main program */
-
-			int64_t status=0;
+			int64_t count=0;
 			if(PCNT.status_unit[i].COUNTER_H_LIM){
-				status=ptr->r_enc_config.counter_h_lim;
-			}
-			if(PCNT.status_unit[i].COUNTER_L_LIM){
-				status=ptr->r_enc_config.counter_l_lim;
+				ptr->count += ptr->r_enc_config.counter_h_lim;
+			} else if(PCNT.status_unit[i].COUNTER_L_LIM){
+				ptr->count += ptr->r_enc_config.counter_l_lim;
+			} else if(ptr->always_interrupt && (PCNT.status_unit[i].thres0_lat || PCNT.status_unit[i].thres1_lat)) {
+				int16_t c;
+				pcnt_get_counter_value(unit, &c);
+				ptr->count += c;
+				pcnt_set_event_value(unit, PCNT_EVT_THRES_0, -1);
+				pcnt_set_event_value(unit, PCNT_EVT_THRES_1, 1);
+				pcnt_event_enable(unit, PCNT_EVT_THRES_0);
+				pcnt_event_enable(unit, PCNT_EVT_THRES_1);
+				pcnt_counter_clear(unit);
 			}
 			//pcnt_counter_clear(ptr->unit);
 			PCNT.int_clr.val = BIT(i); // clear the interrupt
-			ptr->count = status + ptr->count;
 		}
 	}
 }
@@ -73,7 +87,7 @@ void ESP32Encoder::detatch(){
 }
 void ESP32Encoder::attach(int a, int b, enum encType et) {
 	if (attached) {
-		Serial.println("Already attached, FAIL!");
+		ESP_LOGE(TAG, "attach: already attached");
 		return;
 	}
 	int index = 0;
@@ -84,7 +98,7 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 		}
 	}
 	if (index == MAX_ESP32_ENCODERS) {
-		Serial.println("Too many encoders, FAIL!");
+		ESP_LOGE(TAG, "Too many encoders, FAIL!");
 		return;
 	}
 
@@ -175,10 +189,14 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 	/* Register ISR handler and enable interrupts for PCNT unit */
 	if(attachedInterrupt==false){
 		attachedInterrupt=true;
-		esp_err_t er = pcnt_isr_register(pcnt_example_intr_handler,(void *) NULL, (int)0,
+		pcnt_set_event_value(unit, PCNT_EVT_THRES_0, -2);
+		pcnt_set_event_value(unit, PCNT_EVT_THRES_1, 2);
+		pcnt_event_enable(unit, PCNT_EVT_THRES_0);
+		pcnt_event_enable(unit, PCNT_EVT_THRES_1);
+		esp_err_t er = pcnt_isr_register(esp32encoder_pcnt_intr_handler,(void *) NULL, (int)0,
 				(pcnt_isr_handle_t *)&ESP32Encoder::user_isr_handle);
 		if (er != ESP_OK){
-			Serial.println("Encoder wrap interrupt failed");
+			ESP_LOGE(TAG, "Encoder wrap interrupt failed");
 		}
 	}
 	pcnt_intr_enable(unit);
@@ -206,7 +224,7 @@ int64_t ESP32Encoder::getCountRaw() {
 	return c;
 }
 int64_t ESP32Encoder::getCount() {
-	return getCountRaw() + count;
+	return count + getCountRaw();
 }
 
 int64_t ESP32Encoder::clearCount() {
