@@ -46,10 +46,12 @@ ESP32Encoder::~ESP32Encoder() {}
 	#define COUNTER_L_LIM l_lim_lat
 #endif
 static void IRAM_ATTR esp32encoder_pcnt_intr_handler(void *arg) {
+#if 0
 	ESP_LOGD(TAG, "ISR");
 	static bool leds = false;
 	digitalWrite(LED_BUILTIN, (int)leds);
 	leds = !leds;
+#endif
 	ESP32Encoder * ptr = {};
 	uint32_t intr_status = PCNT.int_st.val;
 	int i;
@@ -60,7 +62,6 @@ static void IRAM_ATTR esp32encoder_pcnt_intr_handler(void *arg) {
 			ptr = ESP32Encoder::encoders[i];
 			/* Save the PCNT event type that caused an interrupt
 			 to pass it to the main program */
-			int64_t count=0;
 			if(PCNT.status_unit[i].COUNTER_H_LIM){
 				ptr->count += ptr->r_enc_config.counter_h_lim;
 			} else if(PCNT.status_unit[i].COUNTER_L_LIM){
@@ -176,29 +177,29 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 		pcnt_unit_config(&r_enc_config);	
 	}
 
-
 	// Filter out bounces and noise
 	setFilter(250); // Filter Runt Pulses
 
 	/* Enable events on maximum and minimum limit values */
 	pcnt_event_enable(unit, PCNT_EVT_H_LIM);
 	pcnt_event_enable(unit, PCNT_EVT_L_LIM);
-
 	pcnt_counter_pause(unit); // Initial PCNT init
-	pcnt_counter_clear(unit);
 	/* Register ISR handler and enable interrupts for PCNT unit */
-	if(attachedInterrupt==false){
-		attachedInterrupt=true;
-		pcnt_set_event_value(unit, PCNT_EVT_THRES_0, -2);
-		pcnt_set_event_value(unit, PCNT_EVT_THRES_1, 2);
-		pcnt_event_enable(unit, PCNT_EVT_THRES_0);
-		pcnt_event_enable(unit, PCNT_EVT_THRES_1);
+	if(! attachedInterrupt){
+		if (always_interrupt) {
+			pcnt_set_event_value(unit, PCNT_EVT_THRES_0, -1);
+			pcnt_set_event_value(unit, PCNT_EVT_THRES_1, 1);
+			pcnt_event_enable(unit, PCNT_EVT_THRES_0);
+			pcnt_event_enable(unit, PCNT_EVT_THRES_1);
+		}
 		esp_err_t er = pcnt_isr_register(esp32encoder_pcnt_intr_handler,(void *) NULL, (int)0,
 				(pcnt_isr_handle_t *)&ESP32Encoder::user_isr_handle);
 		if (er != ESP_OK){
 			ESP_LOGE(TAG, "Encoder wrap interrupt failed");
 		}
+		attachedInterrupt=true;
 	}
+	pcnt_counter_clear(unit);
 	pcnt_intr_enable(unit);
 	pcnt_counter_resume(unit);
 
