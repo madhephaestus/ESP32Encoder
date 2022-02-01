@@ -27,11 +27,11 @@ class ESP32Encoder {
 public:
 	/**
 	 * @brief Construct a new ESP32Encoder object
-	 * 
+	 *
 	 * @param always_interrupt set to true to enable interrupt on every encoder pulse, otherwise false
 	 * @param enc_isr_cb callback executed on every encoder ISR, gets a pointer to
 	 * 	the ESP32Encoder instance as an argument, no effect if always_interrupt is
-	 * 	false 
+	 * 	false
 	 */
 	ESP32Encoder(bool always_interrupt=false, enc_isr_cb_t enc_isr_cb=nullptr);
 	~ESP32Encoder();
@@ -68,6 +68,6 @@ private:
   bool working;
 };
 
-//Added by Sloeber 
+//Added by Sloeber
 #pragma once
 
