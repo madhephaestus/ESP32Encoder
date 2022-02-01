@@ -46,43 +46,38 @@ ESP32Encoder::~ESP32Encoder() {}
 	#define COUNTER_H_LIM h_lim_lat
 	#define COUNTER_L_LIM l_lim_lat
 #endif
+
 static void IRAM_ATTR esp32encoder_pcnt_intr_handler(void *arg) {
-#if 0
-	ESP_LOGD(TAG, "ISR");
-	static bool leds = false;
-	digitalWrite(LED_BUILTIN, (int)leds);
-	leds = !leds;
-#endif
-	ESP32Encoder * ptr = {};
+	ESP32Encoder * esp32enc = {};
 	uint32_t intr_status = PCNT.int_st.val;
 	for (uint8_t i = 0; i < PCNT_UNIT_MAX; i++) {
 		if (intr_status & (BIT(i))) {
 			pcnt_unit_t unit = static_cast<pcnt_unit_t>(i);
-			ptr = ESP32Encoder::encoders[i];
-			/* Save the PCNT event type that caused an interrupt
-			 to pass it to the main program */
+			esp32enc = ESP32Encoder::encoders[i];
 			if(PCNT.status_unit[i].COUNTER_H_LIM){
-				ptr->count += ptr->r_enc_config.counter_h_lim;
+				esp32enc->count += esp32enc->r_enc_config.counter_h_lim;
+				pcnt_counter_clear(unit);
 			} else if(PCNT.status_unit[i].COUNTER_L_LIM){
-				ptr->count += ptr->r_enc_config.counter_l_lim;
-			} else if(ptr->always_interrupt && (PCNT.status_unit[i].thres0_lat || PCNT.status_unit[i].thres1_lat)) {
+				esp32enc->count += esp32enc->r_enc_config.counter_l_lim;
+				pcnt_counter_clear(unit);
+			} else if(esp32enc->always_interrupt && (PCNT.status_unit[i].thres0_lat || PCNT.status_unit[i].thres1_lat)) {
 				int16_t c;
 				pcnt_get_counter_value(unit, &c);
-				ptr->count += c;
+				esp32enc->count += c;
 				pcnt_set_event_value(unit, PCNT_EVT_THRES_0, -1);
 				pcnt_set_event_value(unit, PCNT_EVT_THRES_1, 1);
 				pcnt_event_enable(unit, PCNT_EVT_THRES_0);
 				pcnt_event_enable(unit, PCNT_EVT_THRES_1);
 				pcnt_counter_clear(unit);
-				if (ptr->_enc_isr_cb) {
-					ptr->_enc_isr_cb();
+				if (esp32enc->_enc_isr_cb) {
+					esp32enc->_enc_isr_cb(esp32enc);
 				}
 			}
-			//pcnt_counter_clear(ptr->unit);
 			PCNT.int_clr.val = BIT(i); // clear the interrupt
 		}
 	}
 }
+
 void ESP32Encoder::detatch(){
 	pcnt_counter_pause(unit);
 	ESP32Encoder::encoders[unit]=NULL;
