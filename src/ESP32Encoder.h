@@ -6,19 +6,24 @@
 #define 	_INT16_MAX 32766
 #define  	_INT16_MIN -32766
 
+
 enum encType {
-single,
-half,
-full
+	single,
+	half,
+	full
 };
+
 enum puType {
-UP,
-DOWN,
-NONE
+	UP,
+	DOWN,
+	NONE
 };
+
+typedef void (*enc_isr_cb_t)(void);
+
 class ESP32Encoder {
 public:
-	ESP32Encoder(bool always_interrupt=false);
+	ESP32Encoder(bool always_interrupt=false,  enc_isr_cb_t=nullptr);
 	~ESP32Encoder();
 	void attachHalfQuad(int aPintNumber, int bPinNumber);
 	void attachFullQuad(int aPintNumber, int bPinNumber);
@@ -41,6 +46,7 @@ public:
 	volatile int64_t count=0;
 	pcnt_config_t r_enc_config;
 	static enum puType useInternalWeakPullResistors;
+	enc_isr_cb_t _enc_isr_cb;
 
 private:
 	static  pcnt_isr_handle_t user_isr_handle;

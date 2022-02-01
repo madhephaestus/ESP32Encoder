@@ -21,11 +21,12 @@ ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, };
 bool ESP32Encoder::attachedInterrupt=false;
 pcnt_isr_handle_t ESP32Encoder::user_isr_handle = NULL;
 
-ESP32Encoder::ESP32Encoder(bool always_interrupt_):
+ESP32Encoder::ESP32Encoder(bool always_interrupt_, enc_isr_cb_t enc_isr_cb):
 	always_interrupt{always_interrupt_},
 	aPinNumber{(gpio_num_t) 0},
 	bPinNumber{(gpio_num_t) 0},
 	unit{(pcnt_unit_t) -1},
+	_enc_isr_cb(enc_isr_cb),
 	attached{false},
 	direction{false},
 	working{false}
@@ -54,9 +55,7 @@ static void IRAM_ATTR esp32encoder_pcnt_intr_handler(void *arg) {
 #endif
 	ESP32Encoder * ptr = {};
 	uint32_t intr_status = PCNT.int_st.val;
-	int i;
-
-	for (i = 0; i < PCNT_UNIT_MAX; i++) {
+	for (uint8_t i = 0; i < PCNT_UNIT_MAX; i++) {
 		if (intr_status & (BIT(i))) {
 			pcnt_unit_t unit = static_cast<pcnt_unit_t>(i);
 			ptr = ESP32Encoder::encoders[i];
@@ -75,6 +74,9 @@ static void IRAM_ATTR esp32encoder_pcnt_intr_handler(void *arg) {
 				pcnt_event_enable(unit, PCNT_EVT_THRES_0);
 				pcnt_event_enable(unit, PCNT_EVT_THRES_1);
 				pcnt_counter_clear(unit);
+				if (ptr->_enc_isr_cb) {
+					ptr->_enc_isr_cb();
+				}
 			}
 			//pcnt_counter_clear(ptr->unit);
 			PCNT.int_clr.val = BIT(i); // clear the interrupt
