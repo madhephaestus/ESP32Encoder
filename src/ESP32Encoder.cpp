@@ -21,12 +21,13 @@ ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, };
 bool ESP32Encoder::attachedInterrupt=false;
 pcnt_isr_handle_t ESP32Encoder::user_isr_handle = NULL;
 
-ESP32Encoder::ESP32Encoder(bool always_interrupt_, enc_isr_cb_t enc_isr_cb):
+ESP32Encoder::ESP32Encoder(bool always_interrupt_, enc_isr_cb_t enc_isr_cb, void* enc_isr_cb_data):
 	always_interrupt{always_interrupt_},
 	aPinNumber{(gpio_num_t) 0},
 	bPinNumber{(gpio_num_t) 0},
 	unit{(pcnt_unit_t) -1},
 	_enc_isr_cb(enc_isr_cb),
+	_enc_isr_cb_data(enc_isr_cb_data),
 	attached{false},
 	direction{false},
 	working{false}
@@ -70,7 +71,7 @@ static void IRAM_ATTR esp32encoder_pcnt_intr_handler(void *arg) {
 				pcnt_event_enable(unit, PCNT_EVT_THRES_1);
 				pcnt_counter_clear(unit);
 				if (esp32enc->_enc_isr_cb) {
-					esp32enc->_enc_isr_cb(esp32enc);
+					esp32enc->_enc_isr_cb(esp32enc->_enc_isr_cb_data);
 				}
 			}
 			PCNT.int_clr.val = BIT(i); // clear the interrupt
@@ -171,7 +172,7 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 		r_enc_config		.counter_h_lim = _INT16_MAX;
 		r_enc_config		.counter_l_lim = _INT16_MIN ;
 
-		pcnt_unit_config(&r_enc_config);	
+		pcnt_unit_config(&r_enc_config);
 	}
 
 	// Filter out bounces and noise
@@ -241,10 +242,10 @@ int64_t ESP32Encoder::resumeCount() {
 void ESP32Encoder::setFilter(uint16_t value) {
 	if(value>1023)value=1023;
 	if(value==0) {
-		pcnt_filter_disable(unit);	
+		pcnt_filter_disable(unit);
 	} else {
 		pcnt_set_filter_value(unit, value);
-		pcnt_filter_enable(unit);	
+		pcnt_filter_enable(unit);
 	}
-	
+
 }

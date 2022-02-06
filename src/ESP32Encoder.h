@@ -21,7 +21,7 @@ enum puType {
 
 class ESP32Encoder;
 
-typedef void (*enc_isr_cb_t)(ESP32Encoder*);
+typedef void (*enc_isr_cb_t)(void*);
 
 class ESP32Encoder {
 public:
@@ -33,7 +33,7 @@ public:
 	 * 	the ESP32Encoder instance as an argument, no effect if always_interrupt is
 	 * 	false
 	 */
-	ESP32Encoder(bool always_interrupt=false, enc_isr_cb_t enc_isr_cb=nullptr);
+	ESP32Encoder(bool always_interrupt=false, enc_isr_cb_t enc_isr_cb=nullptr, void* enc_isr_cb_data=nullptr);
 	~ESP32Encoder();
 	void attachHalfQuad(int aPintNumber, int bPinNumber);
 	void attachFullQuad(int aPintNumber, int bPinNumber);
@@ -57,6 +57,7 @@ public:
 	pcnt_config_t r_enc_config;
 	static enum puType useInternalWeakPullResistors;
 	enc_isr_cb_t _enc_isr_cb;
+	void* _enc_isr_cb_data;
 
 private:
 	static  pcnt_isr_handle_t user_isr_handle;
