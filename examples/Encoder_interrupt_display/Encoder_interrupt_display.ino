@@ -4,8 +4,9 @@
 #include <Adafruit_SSD1306.h>
 #include "esp_task_wdt.h"
 
-static IRAM_ATTR void enc_cb(ESP32Encoder* enc) {
-  Serial.printf("enc cb: count: %d\n", enc->getCount());
+static IRAM_ATTR void enc_cb(void* arg) {
+  ESP32Encoder* enc = (ESP32Encoder*) arg;
+  //Serial.printf("enc cb: count: %d\n", enc->getCount());
   static bool leds = false;
   digitalWrite(LED_BUILTIN, (int)leds);
   leds = !leds;
@@ -48,17 +49,16 @@ void setup(){
   esp_log_level_set("*", ESP_LOG_DEBUG);
   esp_log_level_set("main", ESP_LOG_DEBUG);
   esp_log_level_set("ESP32Encoder", ESP_LOG_DEBUG);
-
   esp_task_wdt_add(loopTaskHandle);
 }
 
 void loop(){
-  // Loop and read the count
-  //Serial.printf("Encoder count = %lld\n", encoder.getCount());
+
   display.clearDisplay();
   display.setCursor(0,0);
   display.printf("E: %lld\n", encoder.getCount());
   display.display();
+  Serial.printf("Enc count: %d\n", encoder.getCount());
   delay(500);
-  ESP_LOGD(LOG_TAG, "loop");
+  
 }
