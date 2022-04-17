@@ -188,18 +188,18 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 	pcnt_counter_pause(unit); // Initial PCNT init
 	/* Register ISR handler and enable interrupts for PCNT unit */
 	if(! attachedInterrupt){
-		if (always_interrupt) {
-			pcnt_set_event_value(unit, PCNT_EVT_THRES_0, -1);
-			pcnt_set_event_value(unit, PCNT_EVT_THRES_1, 1);
-			pcnt_event_enable(unit, PCNT_EVT_THRES_0);
-			pcnt_event_enable(unit, PCNT_EVT_THRES_1);
-		}
 		esp_err_t er = pcnt_isr_register(esp32encoder_pcnt_intr_handler,(void *) NULL, (int)0,
 				(pcnt_isr_handle_t *)&ESP32Encoder::user_isr_handle);
 		if (er != ESP_OK){
 			ESP_LOGE(TAG, "Encoder wrap interrupt failed");
 		}
 		attachedInterrupt=true;
+	}
+	if (always_interrupt){
+		pcnt_set_event_value(unit, PCNT_EVT_THRES_0, -1);
+		pcnt_set_event_value(unit, PCNT_EVT_THRES_1, 1);
+		pcnt_event_enable(unit, PCNT_EVT_THRES_0);
+		pcnt_event_enable(unit, PCNT_EVT_THRES_1);
 	}
 	pcnt_counter_clear(unit);
 	pcnt_intr_enable(unit);
