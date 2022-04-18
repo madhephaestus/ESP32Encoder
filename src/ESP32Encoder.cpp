@@ -47,9 +47,17 @@ ESP32Encoder::~ESP32Encoder() {}
 #ifdef CONFIG_IDF_TARGET_ESP32S2
 	#define COUNTER_H_LIM cnt_thr_h_lim_lat_un
 	#define COUNTER_L_LIM cnt_thr_l_lim_lat_un
+	#define COUNTER_THRES0_LAT cnt_thr_thres0_lat_un
+	#define COUNTER_THRES1_LAT cnt_thr_thres1_lat_un
 #else
-	#define COUNTER_H_LIM h_lim_lat
-	#define COUNTER_L_LIM l_lim_lat
+	// #define COUNTER_H_LIM h_lim_lat
+	// #define COUNTER_L_LIM l_lim_lat
+	// #define COUNTER_THRES0_LAT thres0_lat
+	// #define COUNTER_THRES1_LAT thres1_lat
+	#define COUNTER_H_LIM cnt_thr_h_lim_lat_un
+	#define COUNTER_L_LIM cnt_thr_l_lim_lat_un
+	#define COUNTER_THRES0_LAT cnt_thr_thres0_lat_un
+	#define COUNTER_THRES1_LAT cnt_thr_thres1_lat_un
 #endif
 
 static void IRAM_ATTR esp32encoder_pcnt_intr_handler(void *arg) {
@@ -65,7 +73,7 @@ static void IRAM_ATTR esp32encoder_pcnt_intr_handler(void *arg) {
 			} else if(PCNT.status_unit[i].COUNTER_L_LIM){
 				esp32enc->count += esp32enc->r_enc_config.counter_l_lim;
 				pcnt_counter_clear(unit);
-			} else if(esp32enc->always_interrupt && (PCNT.status_unit[i].thres0_lat || PCNT.status_unit[i].thres1_lat)) {
+			} else if(esp32enc->always_interrupt && (PCNT.status_unit[i].COUNTER_THRES0_LAT || PCNT.status_unit[i].COUNTER_THRES1_LAT)) {
 				int16_t c;
 				pcnt_get_counter_value(unit, &c);
 				esp32enc->count += c;
