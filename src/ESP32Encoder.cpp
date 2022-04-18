@@ -53,10 +53,8 @@ ESP32Encoder::~ESP32Encoder() {}
 #elif CONFIG_IDF_TARGET_ESP32S3
 	#define COUNTER_H_LIM cnt_thr_h_lim_lat_un
 	#define COUNTER_L_LIM cnt_thr_l_lim_lat_un
-	#define COUNTER_THRES0_LAT cnt_thr_thres0_lat_un
-	#define COUNTER_THRES1_LAT cnt_thr_thres1_lat_un
-	#define thres0_lat COUNTER_THRES0_LAT
-	#define thres1_lat COUNTER_THRES1_LAT
+	#define thres0_lat cnt_thr_thres0_lat_un
+	#define thres1_lat cnt_thr_thres1_lat_un
 #else
 	#define COUNTER_H_LIM h_lim_lat
 	#define COUNTER_L_LIM l_lim_lat
