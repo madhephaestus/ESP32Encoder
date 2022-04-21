@@ -47,10 +47,20 @@ ESP32Encoder::~ESP32Encoder() {}
 #ifdef CONFIG_IDF_TARGET_ESP32S2
 	#define COUNTER_H_LIM cnt_thr_h_lim_lat_un
 	#define COUNTER_L_LIM cnt_thr_l_lim_lat_un
+	#define thres0_lat cnt_thr_thres0_lat_un
+	#define thres1_lat cnt_thr_thres1_lat_un
+
+#elif CONFIG_IDF_TARGET_ESP32S3
+	#define COUNTER_H_LIM cnt_thr_h_lim_lat_un
+	#define COUNTER_L_LIM cnt_thr_l_lim_lat_un
+	#define thres0_lat cnt_thr_thres0_lat_un
+	#define thres1_lat cnt_thr_thres1_lat_un
 #else
 	#define COUNTER_H_LIM h_lim_lat
 	#define COUNTER_L_LIM l_lim_lat
 #endif
+
+
 
 static void IRAM_ATTR esp32encoder_pcnt_intr_handler(void *arg) {
 	ESP32Encoder * esp32enc = {};
@@ -82,6 +92,10 @@ static void IRAM_ATTR esp32encoder_pcnt_intr_handler(void *arg) {
 		}
 	}
 }
+
+
+
+
 
 void ESP32Encoder::detatch(){
 	pcnt_counter_pause(unit);
