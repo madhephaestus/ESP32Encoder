@@ -1,5 +1,4 @@
 #pragma once
-#include <Arduino.h>
 #include <driver/gpio.h>
 #include <driver/pcnt.h>
 #define MAX_ESP32_ENCODERS PCNT_UNIT_MAX
@@ -43,7 +42,7 @@ public:
 	int64_t pauseCount();
 	int64_t resumeCount();
 	void detatch();
-	boolean isAttached(){return attached;}
+	bool isAttached(){return attached;}
 	void setCount(int64_t value);
 	void setFilter(uint16_t value);
 	static ESP32Encoder *encoders[MAX_ESP32_ENCODERS];
@@ -71,4 +70,3 @@ private:
 
 //Added by Sloeber
 #pragma once
-
