@@ -41,7 +41,8 @@ public:
 	int64_t clearCount();
 	int64_t pauseCount();
 	int64_t resumeCount();
-	void detatch();
+	void detach();
+	[[deprecated("Replaced by detach")]] void detatch();
 	bool isAttached(){return attached;}
 	void setCount(int64_t value);
 	void setFilter(uint16_t value);
