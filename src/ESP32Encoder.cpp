@@ -8,14 +8,20 @@
 #include <ESP32Encoder.h>
 #include <soc/pcnt_struct.h>
 #include "esp_log.h"
+#include "esp_ipc.h"
 
 static const char* TAG = "ESP32Encoder";
+
+static portMUX_TYPE spinlock = portMUX_INITIALIZER_UNLOCKED;
+#define _ENTER_CRITICAL() portENTER_CRITICAL_SAFE(&spinlock)
+#define _EXIT_CRITICAL() portEXIT_CRITICAL_SAFE(&spinlock)
 
 
 //static ESP32Encoder *gpio2enc[48];
 //
 //
 enum puType ESP32Encoder::useInternalWeakPullResistors=DOWN;
+uint32_t ESP32Encoder::isrServiceCpuCore = ISR_CORE_USE_DEFAULT;
 ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, };
 
 bool ESP32Encoder::attachedInterrupt=false;
@@ -63,6 +69,7 @@ ESP32Encoder::~ESP32Encoder() {}
 static void esp32encoder_pcnt_intr_handler(void *arg) {
 	ESP32Encoder * esp32enc = static_cast<ESP32Encoder *>(arg);
 	pcnt_unit_t unit = esp32enc->r_enc_config.unit;
+	_ENTER_CRITICAL();
 	if(PCNT.status_unit[unit].COUNTER_H_LIM){
 		esp32enc->count += esp32enc->r_enc_config.counter_h_lim;
 		pcnt_counter_clear(unit);
@@ -82,6 +89,7 @@ static void esp32encoder_pcnt_intr_handler(void *arg) {
 			esp32enc->_enc_isr_cb(esp32enc->_enc_isr_cb_data);
 		}
 	}
+	_EXIT_CRITICAL();
 }
 
 
@@ -96,6 +104,11 @@ void ESP32Encoder::detach(){
 
 void ESP32Encoder::detatch(){
 	this->detach();
+}
+
+static IRAM_ATTR void ipc_install_isr_on_core(void *arg) {
+    esp_err_t *result = (esp_err_t*) arg;
+    *result = pcnt_isr_service_install(0);
 }
 
 void ESP32Encoder::attach(int a, int b, enum encType et) {
@@ -184,9 +197,20 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 	pcnt_counter_pause(unit); // Initial PCNT init
 	/* Register ISR service and enable interrupts for PCNT unit */
 	if(! attachedInterrupt){
-		esp_err_t er = pcnt_isr_service_install(0);
-		if (er != ESP_OK){
-			ESP_LOGE(TAG, "Encoder install isr service failed");
+		if (isrServiceCpuCore == ISR_CORE_USE_DEFAULT || isrServiceCpuCore == xPortGetCoreID()) {
+			esp_err_t er = pcnt_isr_service_install(0);
+			if (er != ESP_OK){
+				ESP_LOGE(TAG, "Encoder install isr service on same core failed");
+			}
+		} else {
+			esp_err_t ipc_ret_code = ESP_FAIL;
+			esp_err_t er = esp_ipc_call_blocking(isrServiceCpuCore, ipc_install_isr_on_core, &ipc_ret_code);
+			if (er != ESP_OK){
+				ESP_LOGE(TAG, "IPC call to install isr service on core %d failed", isrServiceCpuCore);
+			}
+			if (ipc_ret_code != ESP_OK){
+				ESP_LOGE(TAG, "Encoder install isr service on core %d failed", isrServiceCpuCore);
+			}
 		}
 
 		attachedInterrupt=true;
@@ -223,19 +247,41 @@ void ESP32Encoder::attachFullQuad(int aPintNumber, int bPinNumber) {
 }
 
 void ESP32Encoder::setCount(int64_t value) {
+	_ENTER_CRITICAL();
 	count = value - getCountRaw();
+	_EXIT_CRITICAL();
 }
+
 int64_t ESP32Encoder::getCountRaw() {
 	int16_t c;
+	int64_t compensate = 0;
+	_ENTER_CRITICAL();
 	pcnt_get_counter_value(unit, &c);
-	return c;
+	// check if counter overflowed, if so re-read and compensate
+	// see https://github.com/espressif/esp-idf/blob/v4.4.1/tools/unit-test-app/components/test_utils/ref_clock_impl_rmt_pcnt.c#L168-L172
+	if (PCNT.int_st.val & BIT(unit)) {
+        pcnt_get_counter_value(unit, &c);
+		if(PCNT.status_unit[unit].COUNTER_H_LIM){
+			compensate = r_enc_config.counter_h_lim;
+		} else if (PCNT.status_unit[unit].COUNTER_L_LIM) {
+			compensate = r_enc_config.counter_l_lim;
+		}
+	}
+	_EXIT_CRITICAL();
+	return compensate + c;
 }
+
 int64_t ESP32Encoder::getCount() {
-	return count + getCountRaw();
+	_ENTER_CRITICAL();
+	int64_t result = count + getCountRaw();
+	_EXIT_CRITICAL();
+	return result;
 }
 
 int64_t ESP32Encoder::clearCount() {
+	_ENTER_CRITICAL();
 	count = 0;
+	_EXIT_CRITICAL();
 	return pcnt_counter_clear(unit);
 }
 
