@@ -4,7 +4,7 @@
 #define MAX_ESP32_ENCODERS PCNT_UNIT_MAX
 #define 	_INT16_MAX 32766
 #define  	_INT16_MIN -32766
-
+#define ISR_CORE_USE_DEFAULT (0xffffffff)
 
 enum encType {
 	single,
@@ -56,6 +56,7 @@ public:
 	volatile int64_t count=0;
 	pcnt_config_t r_enc_config;
 	static enum puType useInternalWeakPullResistors;
+	static uint32_t isrServiceCpuCore;
 	enc_isr_cb_t _enc_isr_cb;
 	void* _enc_isr_cb_data;
 
