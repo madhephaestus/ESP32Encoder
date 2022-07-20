@@ -51,7 +51,6 @@ public:
 	gpio_num_t aPinNumber;
 	gpio_num_t bPinNumber;
 	pcnt_unit_t unit;
-	bool fullQuad=false;
 	int countsMode = 2;
 	volatile int64_t count=0;
 	pcnt_config_t r_enc_config;
