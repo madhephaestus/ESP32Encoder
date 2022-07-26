@@ -97,11 +97,15 @@ static void IRAM_ATTR esp32encoder_pcnt_intr_handler(void *arg) {
 
 
 
-void ESP32Encoder::detatch(){
+void ESP32Encoder::detach(){
 	pcnt_counter_pause(unit);
 	ESP32Encoder::encoders[unit]=NULL;
-
 }
+
+void ESP32Encoder::detatch(){
+	this->detach();
+}
+
 void ESP32Encoder::attach(int a, int b, enum encType et) {
 	if (attached) {
 		ESP_LOGE(TAG, "attach: already attached");
