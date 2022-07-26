@@ -26,7 +26,6 @@ ESP32Encoder::ESP32Encoder(bool always_interrupt_, enc_isr_cb_t enc_isr_cb, void
 	aPinNumber{(gpio_num_t) 0},
 	bPinNumber{(gpio_num_t) 0},
 	unit{(pcnt_unit_t) -1},
-	fullQuad{false},
 	countsMode{2},
 	count{0},
 	r_enc_config{},
@@ -124,8 +123,7 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 	}
 
 	// Set data now that pin attach checks are done
-	fullQuad = et != single;
-		unit = (pcnt_unit_t) index;
+	unit = (pcnt_unit_t) index;
 	this->aPinNumber = (gpio_num_t) a;
 	this->bPinNumber = (gpio_num_t) b;
 
@@ -143,13 +141,14 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 		gpio_pullup_en(bPinNumber);
 	}
 	// Set up encoder PCNT configuration
+	// Configure channel 0
 	r_enc_config.pulse_gpio_num = aPinNumber; //Rotary Encoder Chan A
 	r_enc_config.ctrl_gpio_num = bPinNumber;    //Rotary Encoder Chan B
 
 	r_enc_config.unit = unit;
 	r_enc_config.channel = PCNT_CHANNEL_0;
 
-	r_enc_config.pos_mode = fullQuad ? PCNT_COUNT_DEC : PCNT_COUNT_DIS; //Count Only On Rising-Edges
+	r_enc_config.pos_mode = et != single ? PCNT_COUNT_DEC : PCNT_COUNT_DIS; //Count Only On Rising-Edges
 	r_enc_config.neg_mode = PCNT_COUNT_INC;   // Discard Falling-Edge
 
 	r_enc_config.lctrl_mode = PCNT_MODE_KEEP;    // Rising A on HIGH B = CW Step
@@ -160,42 +159,28 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 
 	pcnt_unit_config(&r_enc_config);
 
+	// Configure channel 0
+	r_enc_config.pulse_gpio_num = bPinNumber; //make prior control into signal
+	r_enc_config.ctrl_gpio_num = aPinNumber;    //and prior signal into control
+
+	r_enc_config.channel = PCNT_CHANNEL_1; // channel 1
+
+	r_enc_config.pos_mode = PCNT_COUNT_DIS; //disabling channel 1
+	r_enc_config.neg_mode = PCNT_COUNT_DIS;   // disabling channel 1
+
+	r_enc_config.lctrl_mode = PCNT_MODE_DISABLE;    // disabling channel 1
+	r_enc_config.hctrl_mode = PCNT_MODE_DISABLE; // disabling channel 1
+
 	if (et == full) {
 		// set up second channel for full quad
-		r_enc_config.pulse_gpio_num = bPinNumber; //make prior control into signal
-		r_enc_config.ctrl_gpio_num = aPinNumber;    //and prior signal into control
-
-		r_enc_config.unit = unit;
-		r_enc_config.channel = PCNT_CHANNEL_1; // channel 1
 
 		r_enc_config.pos_mode = PCNT_COUNT_DEC; //Count Only On Rising-Edges
 		r_enc_config.neg_mode = PCNT_COUNT_INC;   // Discard Falling-Edge
 
 		r_enc_config.lctrl_mode = PCNT_MODE_REVERSE;    // prior high mode is now low
 		r_enc_config.hctrl_mode = PCNT_MODE_KEEP; // prior low mode is now high
-
-		r_enc_config		.counter_h_lim = _INT16_MAX;
-		r_enc_config		.counter_l_lim = _INT16_MIN ;
-
-		pcnt_unit_config(&r_enc_config);
-	} else { // make sure channel 1 is not set when not full quad
-		r_enc_config.pulse_gpio_num = bPinNumber; //make prior control into signal
-		r_enc_config.ctrl_gpio_num = aPinNumber;    //and prior signal into control
-
-		r_enc_config.unit = unit;
-		r_enc_config.channel = PCNT_CHANNEL_1; // channel 1
-
-		r_enc_config.pos_mode = PCNT_COUNT_DIS; //disabling channel 1
-		r_enc_config.neg_mode = PCNT_COUNT_DIS;   // disabling channel 1
-
-		r_enc_config.lctrl_mode = PCNT_MODE_DISABLE;    // disabling channel 1
-		r_enc_config.hctrl_mode = PCNT_MODE_DISABLE; // disabling channel 1
-
-		r_enc_config		.counter_h_lim = _INT16_MAX;
-		r_enc_config		.counter_l_lim = _INT16_MIN ;
-
-		pcnt_unit_config(&r_enc_config);
 	}
+	pcnt_unit_config(&r_enc_config);
 
 	// Filter out bounces and noise
 	setFilter(250); // Filter Runt Pulses
