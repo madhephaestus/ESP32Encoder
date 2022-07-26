@@ -60,7 +60,6 @@ public:
 	void* _enc_isr_cb_data;
 
 private:
-	static  pcnt_isr_handle_t user_isr_handle;
 	static bool attachedInterrupt;
 	void attach(int aPintNumber, int bPinNumber, enum encType et);
 	int64_t getCountRaw();

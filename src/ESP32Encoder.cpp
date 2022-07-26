@@ -19,7 +19,6 @@ enum puType ESP32Encoder::useInternalWeakPullResistors=DOWN;
 ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, };
 
 bool ESP32Encoder::attachedInterrupt=false;
-pcnt_isr_handle_t ESP32Encoder::user_isr_handle = NULL;
 
 ESP32Encoder::ESP32Encoder(bool always_interrupt_, enc_isr_cb_t enc_isr_cb, void* enc_isr_cb_data):
 	always_interrupt{always_interrupt_},
@@ -61,33 +60,26 @@ ESP32Encoder::~ESP32Encoder() {}
 
 
 
-static void IRAM_ATTR esp32encoder_pcnt_intr_handler(void *arg) {
-	ESP32Encoder * esp32enc = {};
-	uint32_t intr_status = PCNT.int_st.val;
-	for (uint8_t i = 0; i < PCNT_UNIT_MAX; i++) {
-		if (intr_status & (BIT(i))) {
-			pcnt_unit_t unit = static_cast<pcnt_unit_t>(i);
-			esp32enc = ESP32Encoder::encoders[i];
-			if(PCNT.status_unit[i].COUNTER_H_LIM){
-				esp32enc->count += esp32enc->r_enc_config.counter_h_lim;
-				pcnt_counter_clear(unit);
-			} else if(PCNT.status_unit[i].COUNTER_L_LIM){
-				esp32enc->count += esp32enc->r_enc_config.counter_l_lim;
-				pcnt_counter_clear(unit);
-			} else if(esp32enc->always_interrupt && (PCNT.status_unit[i].thres0_lat || PCNT.status_unit[i].thres1_lat)) {
-				int16_t c;
-				pcnt_get_counter_value(unit, &c);
-				esp32enc->count += c;
-				pcnt_set_event_value(unit, PCNT_EVT_THRES_0, -1);
-				pcnt_set_event_value(unit, PCNT_EVT_THRES_1, 1);
-				pcnt_event_enable(unit, PCNT_EVT_THRES_0);
-				pcnt_event_enable(unit, PCNT_EVT_THRES_1);
-				pcnt_counter_clear(unit);
-				if (esp32enc->_enc_isr_cb) {
-					esp32enc->_enc_isr_cb(esp32enc->_enc_isr_cb_data);
-				}
-			}
-			PCNT.int_clr.val = BIT(i); // clear the interrupt
+static void esp32encoder_pcnt_intr_handler(void *arg) {
+	ESP32Encoder * esp32enc = static_cast<ESP32Encoder *>(arg);
+	pcnt_unit_t unit = esp32enc->r_enc_config.unit;
+	if(PCNT.status_unit[unit].COUNTER_H_LIM){
+		esp32enc->count += esp32enc->r_enc_config.counter_h_lim;
+		pcnt_counter_clear(unit);
+	} else if(PCNT.status_unit[unit].COUNTER_L_LIM){
+		esp32enc->count += esp32enc->r_enc_config.counter_l_lim;
+		pcnt_counter_clear(unit);
+	} else if(esp32enc->always_interrupt && (PCNT.status_unit[unit].thres0_lat || PCNT.status_unit[unit].thres1_lat)) {
+		int16_t c;
+		pcnt_get_counter_value(unit, &c);
+		esp32enc->count += c;
+		pcnt_set_event_value(unit, PCNT_EVT_THRES_0, -1);
+		pcnt_set_event_value(unit, PCNT_EVT_THRES_1, 1);
+		pcnt_event_enable(unit, PCNT_EVT_THRES_0);
+		pcnt_event_enable(unit, PCNT_EVT_THRES_1);
+		pcnt_counter_clear(unit);
+		if (esp32enc->_enc_isr_cb) {
+			esp32enc->_enc_isr_cb(esp32enc->_enc_isr_cb_data);
 		}
 	}
 }
@@ -98,6 +90,7 @@ static void IRAM_ATTR esp32encoder_pcnt_intr_handler(void *arg) {
 
 void ESP32Encoder::detach(){
 	pcnt_counter_pause(unit);
+	pcnt_isr_handler_remove(this->r_enc_config.unit);
 	ESP32Encoder::encoders[unit]=NULL;
 }
 
@@ -189,15 +182,21 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 	pcnt_event_enable(unit, PCNT_EVT_H_LIM);
 	pcnt_event_enable(unit, PCNT_EVT_L_LIM);
 	pcnt_counter_pause(unit); // Initial PCNT init
-	/* Register ISR handler and enable interrupts for PCNT unit */
+	/* Register ISR service and enable interrupts for PCNT unit */
 	if(! attachedInterrupt){
-		esp_err_t er = pcnt_isr_register(esp32encoder_pcnt_intr_handler,(void *) NULL, (int)0,
-				(pcnt_isr_handle_t *)&ESP32Encoder::user_isr_handle);
+		esp_err_t er = pcnt_isr_service_install(0);
 		if (er != ESP_OK){
-			ESP_LOGE(TAG, "Encoder wrap interrupt failed");
+			ESP_LOGE(TAG, "Encoder install isr service failed");
 		}
+
 		attachedInterrupt=true;
 	}
+
+	// Add ISR handler for this unit
+	if (pcnt_isr_handler_add(unit, esp32encoder_pcnt_intr_handler, this) != ESP_OK) {
+		ESP_LOGE(TAG, "Encoder install interrupt handler for unit %d failed", unit);
+	}
+
 	if (always_interrupt){
 		pcnt_set_event_value(unit, PCNT_EVT_THRES_0, -1);
 		pcnt_set_event_value(unit, PCNT_EVT_THRES_1, 1);
