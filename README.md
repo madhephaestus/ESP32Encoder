@@ -15,6 +15,17 @@ This hardware peripheral supports only 8 encoders.
 
 [ESP32Encoder Doxygen](https://madhephaestus.github.io/ESP32Encoder/classESP32Encoder.html)
 
+# Quadrature Explanation
+
+For information on the type of encoder this library is for, see: https://en.wikipedia.org/wiki/Incremental_encoder
+
+The modes of reading encoders in this library are full and half quadrature, and single edge count mode. 
+
+![Image](https://upload.wikimedia.org/wikipedia/commons/1/1e/Incremental_directional_encoder.gif)
+
+Full performs a count increment on all 4 edges, half on the rising and falling of a single channel, and single counts just the rising edge of the A channel. 
+
+
 
 ## Pull Downs/Ups
 
