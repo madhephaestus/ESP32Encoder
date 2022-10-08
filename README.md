@@ -11,6 +11,12 @@ There is only one interrupt for the peripheral, and that is managed by the libra
 
 This hardware peripheral supports only 8 encoders. 
 
+# Support
+
+ESP32 and ESP32c2 are supported. 
+
+ESP32c3 does not have pulse counter hardware. 
+
 # Documentation by Doxygen
 
 [ESP32Encoder Doxygen](https://madhephaestus.github.io/ESP32Encoder/classESP32Encoder.html)
