@@ -6,6 +6,9 @@
  */
 
 #include <ESP32Encoder.h>
+#include <soc/soc_caps.h>
+#if SOC_PCNT_SUPPORTED
+// Not all esp32 chips support the pcnt (notably the esp32c3 does not)
 #include <soc/pcnt_struct.h>
 #include "esp_log.h"
 #include "esp_ipc.h"
@@ -303,3 +306,6 @@ void ESP32Encoder::setFilter(uint16_t value) {
 	}
 
 }
+#else
+#warning PCNT not supported on this SoC, this will likely lead to linker errors when using ESP32Encoder
+#endif // SOC_PCNT_SUPPORTED
