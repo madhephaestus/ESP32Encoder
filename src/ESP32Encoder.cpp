@@ -13,7 +13,7 @@
 #include "esp_log.h"
 #include "esp_ipc.h"
 
-static const char* TAG = "ESP32Encoder";
+static const char* TAG_ENCODER = "ESP32Encoder";
 
 static portMUX_TYPE spinlock = portMUX_INITIALIZER_UNLOCKED;
 #define _ENTER_CRITICAL() portENTER_CRITICAL_SAFE(&spinlock)
@@ -116,7 +116,7 @@ static IRAM_ATTR void ipc_install_isr_on_core(void *arg) {
 
 void ESP32Encoder::attach(int a, int b, enum encType et) {
 	if (attached) {
-		ESP_LOGE(TAG, "attach: already attached");
+		ESP_LOGE(TAG_ENCODER, "attach: already attached");
 		return;
 	}
 	int index = 0;
@@ -127,7 +127,7 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 		}
 	}
 	if (index == MAX_ESP32_ENCODERS) {
-		ESP_LOGE(TAG, "Too many encoders, FAIL!");
+		ESP_LOGE(TAG_ENCODER, "Too many encoders, FAIL!");
 		return;
 	}
 
@@ -203,16 +203,16 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 		if (isrServiceCpuCore == ISR_CORE_USE_DEFAULT || isrServiceCpuCore == xPortGetCoreID()) {
 			esp_err_t er = pcnt_isr_service_install(0);
 			if (er != ESP_OK){
-				ESP_LOGE(TAG, "Encoder install isr service on same core failed");
+				ESP_LOGE(TAG_ENCODER, "Encoder install isr service on same core failed");
 			}
 		} else {
 			esp_err_t ipc_ret_code = ESP_FAIL;
 			esp_err_t er = esp_ipc_call_blocking(isrServiceCpuCore, ipc_install_isr_on_core, &ipc_ret_code);
 			if (er != ESP_OK){
-				ESP_LOGE(TAG, "IPC call to install isr service on core %d failed", isrServiceCpuCore);
+				ESP_LOGE(TAG_ENCODER, "IPC call to install isr service on core %d failed", isrServiceCpuCore);
 			}
 			if (ipc_ret_code != ESP_OK){
-				ESP_LOGE(TAG, "Encoder install isr service on core %d failed", isrServiceCpuCore);
+				ESP_LOGE(TAG_ENCODER, "Encoder install isr service on core %d failed", isrServiceCpuCore);
 			}
 		}
 
@@ -221,7 +221,7 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 
 	// Add ISR handler for this unit
 	if (pcnt_isr_handler_add(unit, esp32encoder_pcnt_intr_handler, this) != ESP_OK) {
-		ESP_LOGE(TAG, "Encoder install interrupt handler for unit %d failed", unit);
+		ESP_LOGE(TAG_ENCODER, "Encoder install interrupt handler for unit %d failed", unit);
 	}
 
 	if (always_interrupt){
