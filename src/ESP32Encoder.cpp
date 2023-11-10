@@ -43,6 +43,10 @@ ESP32Encoder::ESP32Encoder(bool always_interrupt_, enc_isr_cb_t enc_isr_cb, void
 	direction{false},
 	working{false}
 {
+	if (enc_isr_cb_data == nullptr)
+	{
+		_enc_isr_cb_data = this;
+	}
 }
 
 ESP32Encoder::~ESP32Encoder() {}
