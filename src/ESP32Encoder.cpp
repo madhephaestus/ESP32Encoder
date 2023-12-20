@@ -23,7 +23,7 @@ static portMUX_TYPE spinlock = portMUX_INITIALIZER_UNLOCKED;
 //static ESP32Encoder *gpio2enc[48];
 //
 //
-enum puType ESP32Encoder::useInternalWeakPullResistors=DOWN;
+puType ESP32Encoder::useInternalWeakPullResistors = puType::down;
 uint32_t ESP32Encoder::isrServiceCpuCore = ISR_CORE_USE_DEFAULT;
 ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, };
 
@@ -114,7 +114,7 @@ static IRAM_ATTR void ipc_install_isr_on_core(void *arg) {
     *result = pcnt_isr_service_install(0);
 }
 
-void ESP32Encoder::attach(int a, int b, enum encType et) {
+void ESP32Encoder::attach(int a, int b, encType et) {
 	if (attached) {
 		ESP_LOGE(TAG_ENCODER, "attach: already attached");
 		return;
@@ -141,11 +141,11 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 	gpio_pad_select_gpio(bPinNumber);
 	gpio_set_direction(aPinNumber, GPIO_MODE_INPUT);
 	gpio_set_direction(bPinNumber, GPIO_MODE_INPUT);
-	if(useInternalWeakPullResistors==DOWN){
+	if(useInternalWeakPullResistors == puType::down){
 		gpio_pulldown_en(aPinNumber);
 		gpio_pulldown_en(bPinNumber);
 	}
-	if(useInternalWeakPullResistors==UP){
+	if(useInternalWeakPullResistors == puType::up){
 		gpio_pullup_en(aPinNumber);
 		gpio_pullup_en(bPinNumber);
 	}
@@ -157,7 +157,7 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 	r_enc_config.unit = unit;
 	r_enc_config.channel = PCNT_CHANNEL_0;
 
-	r_enc_config.pos_mode = et != single ? PCNT_COUNT_DEC : PCNT_COUNT_DIS; //Count Only On Rising-Edges
+	r_enc_config.pos_mode = et != encType::single ? PCNT_COUNT_DEC : PCNT_COUNT_DIS; //Count Only On Rising-Edges
 	r_enc_config.neg_mode = PCNT_COUNT_INC;   // Discard Falling-Edge
 
 	r_enc_config.lctrl_mode = PCNT_MODE_KEEP;    // Rising A on HIGH B = CW Step
@@ -180,7 +180,7 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 	r_enc_config.lctrl_mode = PCNT_MODE_DISABLE;    // disabling channel 1
 	r_enc_config.hctrl_mode = PCNT_MODE_DISABLE; // disabling channel 1
 
-	if (et == full) {
+	if (et == encType::full) {
 		// set up second channel for full quad
 
 		r_enc_config.pos_mode = PCNT_COUNT_DEC; //Count Only On Rising-Edges
@@ -239,14 +239,14 @@ void ESP32Encoder::attach(int a, int b, enum encType et) {
 }
 
 void ESP32Encoder::attachHalfQuad(int aPintNumber, int bPinNumber) {
-	attach(aPintNumber, bPinNumber, half);
+	attach(aPintNumber, bPinNumber, encType::half);
 
 }
 void ESP32Encoder::attachSingleEdge(int aPintNumber, int bPinNumber) {
-	attach(aPintNumber, bPinNumber, single);
+	attach(aPintNumber, bPinNumber, encType::single);
 }
 void ESP32Encoder::attachFullQuad(int aPintNumber, int bPinNumber) {
-	attach(aPintNumber, bPinNumber, full);
+	attach(aPintNumber, bPinNumber, encType::full);
 }
 
 void ESP32Encoder::setCount(int64_t value) {

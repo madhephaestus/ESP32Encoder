@@ -29,7 +29,7 @@ void setup(){
   //  >=[enc]|- GND
   //         |- B   --- 1K --- pin 5
 
-  ESP32Encoder::useInternalWeakPullResistors=UP;
+  ESP32Encoder::useInternalWeakPullResistors = puType::up;
   encoder.attachSingleEdge(4, 5);
   encoder.clearCount();
   encoder.setFilter(1023);

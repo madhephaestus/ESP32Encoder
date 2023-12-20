@@ -12,9 +12,9 @@ void setup(){
 	Serial.begin(115200);
 	// Enable the weak pull down resistors
 
-	//ESP32Encoder::useInternalWeakPullResistors=DOWN;
+	//ESP32Encoder::useInternalWeakPullResistors = puType::down;
 	// Enable the weak pull up resistors
-	ESP32Encoder::useInternalWeakPullResistors=UP;
+	ESP32Encoder::useInternalWeakPullResistors = puType::up;
 
 	// use pin 19 and 18 for the first encoder
 	encoder.attachHalfQuad(19, 18);
