@@ -200,6 +200,12 @@ void ESP32Encoder::attach(int a, int b, encType et) {
 	pcnt_counter_pause(unit); // Initial PCNT init
 	/* Register ISR service and enable interrupts for PCNT unit */
 	if(! attachedInterrupt){
+#ifdef CONFIG_IDF_TARGET_ESP32S2 // esp32-s2 is single core, no ipc call
+			esp_err_t er = pcnt_isr_service_install(0);
+			if (er != ESP_OK){
+				ESP_LOGE(TAG_ENCODER, "Encoder install isr service failed");
+			}
+#else
 		if (isrServiceCpuCore == ISR_CORE_USE_DEFAULT || isrServiceCpuCore == xPortGetCoreID()) {
 			esp_err_t er = pcnt_isr_service_install(0);
 			if (er != ESP_OK){
@@ -215,6 +221,7 @@ void ESP32Encoder::attach(int a, int b, encType et) {
 				ESP_LOGE(TAG_ENCODER, "Encoder install isr service on core %d failed", isrServiceCpuCore);
 			}
 		}
+#endif
 
 		attachedInterrupt=true;
 	}
