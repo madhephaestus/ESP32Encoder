@@ -12,6 +12,8 @@
 #include <soc/pcnt_struct.h>
 #include "esp_log.h"
 #include "esp_ipc.h"
+#include <freertos/FreeRTOS.h>
+#include <rom/gpio.h>
 
 static const char* TAG_ENCODER = "ESP32Encoder";
 
