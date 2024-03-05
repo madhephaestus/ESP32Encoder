@@ -12,6 +12,10 @@
 #include <soc/pcnt_struct.h>
 #include "esp_log.h"
 #include "esp_ipc.h"
+#if ( defined(ESP_ARDUINO_VERSION_MAJOR) && (ESP_ARDUINO_VERSION_MAJOR >= 3) )
+	#include <freertos/FreeRTOS.h>
+	#include <rom/gpio.h>
+#endif
 
 static const char* TAG_ENCODER = "ESP32Encoder";
 
