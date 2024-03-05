@@ -135,8 +135,11 @@ void ESP32Encoder::attach(int a, int b, encType et) {
 		}
 	}
 	if (index == MAX_ESP32_ENCODERS) {
-		ESP_LOGE(TAG_ENCODER, "Too many encoders, FAIL!");
-		return;
+		while(1){
+			ESP_LOGE(TAG_ENCODER, "Too many encoders, FAIL!");
+			delay(100);
+		}
+		
 	}
 
 	// Set data now that pin attach checks are done
