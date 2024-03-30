@@ -6,6 +6,7 @@
  */
 
 #include <ESP32Encoder.h>
+#include <Arduino.h>
 #include <soc/soc_caps.h>
 #if SOC_PCNT_SUPPORTED
 // Not all esp32 chips support the pcnt (notably the esp32c3 does not)
