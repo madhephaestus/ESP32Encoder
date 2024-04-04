@@ -15,9 +15,9 @@ void IRAM_ATTR encoderAISR(void * arg) {
 		object->aState = digitalRead(object->apin);
 		object->bState = digitalRead(object->bpin);
 		if (object->aState == object->bState)
-			object->count++;
+			object->count = object->count + 1;
 		else
-			object->count--;
+			object->count = object->count - 1;
 	}
 }
 InterruptEncoder::InterruptEncoder() {}
