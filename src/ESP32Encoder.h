@@ -1,6 +1,13 @@
 #pragma once
 #include <driver/gpio.h>
 #include <driver/pcnt.h>
+#ifndef ARDUINO
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include <freertos/portable.h>
+#include <freertos/semphr.h>
+#endif
+
 #define MAX_ESP32_ENCODERS PCNT_UNIT_MAX
 #define 	_INT16_MAX 32766
 #define  	_INT16_MIN -32766

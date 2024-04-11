@@ -5,6 +5,8 @@
  *      Author: hephaestus
  */
 #include "InterruptEncoder.h"
+
+#ifdef ARDUINO
 void IRAM_ATTR encoderAISR(void * arg) {
 	InterruptEncoder* object=(InterruptEncoder*)arg;
 	long start = micros();
@@ -37,4 +39,8 @@ void InterruptEncoder::attach(int aPinNum, int bPinNum) {
 	pinMode(bpin, INPUT_PULLUP);
 	attachInterruptArg(digitalPinToInterrupt(apin), encoderAISR,this, CHANGE);
 }
+#else 
+// TODO
 
+
+#endif
