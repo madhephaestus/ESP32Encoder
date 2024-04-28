@@ -4,7 +4,7 @@
     "frameworks": "arduino",
     "platforms": ["espressif32"],
     "url": "https://github.com/madhephaestus/ESP32Encoder",
-    "version": "0.11.5",
+    "version": "0.11.6",
     "keywords": "input, encoder",
     "authors": [
         {
