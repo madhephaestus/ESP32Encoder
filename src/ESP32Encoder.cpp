@@ -112,6 +112,7 @@ void ESP32Encoder::detach(){
 	pcnt_counter_pause(unit);
 	pcnt_isr_handler_remove(this->r_enc_config.unit);
 	ESP32Encoder::encoders[unit]=NULL;
+	attached = false;
 }
 
 void ESP32Encoder::detatch(){
