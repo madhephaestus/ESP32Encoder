@@ -10,7 +10,11 @@
 
 #define MAX_ENCODERS 16
 #define US_DEBOUNCE 10
+#ifdef ARDUINO
 #include <Arduino.h>
+#else 
+#include <stdint.h>
+#endif
 
 class InterruptEncoder {
 private:

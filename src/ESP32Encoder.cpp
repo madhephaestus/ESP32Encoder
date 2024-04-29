@@ -6,7 +6,13 @@
  */
 
 #include <ESP32Encoder.h>
+#ifdef ARDUINO
 #include <Arduino.h>
+#else
+#include <rom/gpio.h>
+#define delay(ms) vTaskDelay(pdMS_TO_TICKS(ms))
+#endif
+
 #include <soc/soc_caps.h>
 #if SOC_PCNT_SUPPORTED
 // Not all esp32 chips support the pcnt (notably the esp32c3 does not)
@@ -228,10 +234,10 @@ void ESP32Encoder::attach(int a, int b, encType et) {
 			esp_err_t ipc_ret_code = ESP_FAIL;
 			esp_err_t er = esp_ipc_call_blocking(isrServiceCpuCore, ipc_install_isr_on_core, &ipc_ret_code);
 			if (er != ESP_OK){
-				ESP_LOGE(TAG_ENCODER, "IPC call to install isr service on core %d failed", isrServiceCpuCore);
+				ESP_LOGE(TAG_ENCODER, "IPC call to install isr service on core %ld failed", isrServiceCpuCore);
 			}
 			if (ipc_ret_code != ESP_OK){
-				ESP_LOGE(TAG_ENCODER, "Encoder install isr service on core %d failed", isrServiceCpuCore);
+				ESP_LOGE(TAG_ENCODER, "Encoder install isr service on core %ld failed", isrServiceCpuCore);
 			}
 		}
 #endif
