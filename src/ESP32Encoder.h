@@ -1,6 +1,6 @@
 #pragma once
 #include <driver/gpio.h>
-#include <driver/pcnt.h>
+#include <driver/pulse_cnt.h>
 #ifndef ARDUINO
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
