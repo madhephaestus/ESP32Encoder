@@ -1,7 +1,7 @@
 {
     "name": "ESP32Encoder",
     "description": "Encoder library for the ESP32 using interrupts. This library supports quadrature and half quadrature.",
-    "frameworks": "arduino",
+    "frameworks": ["arduino", "espidf"],
     "platforms": ["espressif32"],
     "url": "https://github.com/madhephaestus/ESP32Encoder",
     "version": "0.11.7",
