@@ -77,6 +77,12 @@ ESP32Encoder::~ESP32Encoder() {}
 	#define COUNTER_L_LIM cnt_thr_l_lim_lat_un
 	#define thres0_lat cnt_thr_thres0_lat_un
 	#define thres1_lat cnt_thr_thres1_lat_un
+
+#elif CONFIG_IDF_TARGET_ESP32C6
+	#define COUNTER_H_LIM cnt_thr_h_lim_lat
+	#define COUNTER_L_LIM cnt_thr_l_lim_lat
+	#define thres0_lat cnt_thr_thres0_lat
+	#define thres1_lat cnt_thr_thres1_lat
 #else
 	#define COUNTER_H_LIM h_lim_lat
 	#define COUNTER_L_LIM l_lim_lat
@@ -219,7 +225,7 @@ void ESP32Encoder::attach(int a, int b, encType et) {
 	pcnt_counter_pause(unit); // Initial PCNT init
 	/* Register ISR service and enable interrupts for PCNT unit */
 	if(! attachedInterrupt){
-#ifdef CONFIG_IDF_TARGET_ESP32S2 // esp32-s2 is single core, no ipc call
+#if ( defined(CONFIG_IDF_TARGET_ESP32S2) || defined(CONFIG_IDF_TARGET_ESP32C6) ) // esp32-s2 and -c6 are single core, no ipc call
 			esp_err_t er = pcnt_isr_service_install(0);
 			if (er != ESP_OK){
 				ESP_LOGE(TAG_ENCODER, "Encoder install isr service failed");
