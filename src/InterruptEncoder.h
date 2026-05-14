@@ -11,16 +11,16 @@
 #define MAX_ENCODERS 16
 #define US_DEBOUNCE 10
 
-#ifdef ESP32ENCODER_USE_INT32
-typedef int32_t enc_count_t;
-#else
-typedef int64_t enc_count_t;
-#endif
-
 #ifdef ARDUINO
 #include <Arduino.h>
 #else 
 #include <stdint.h>
+#endif
+
+#ifdef ESP32ENCODER_USE_INT32
+typedef int32_t enc_count_t;
+#else
+typedef int64_t enc_count_t;
 #endif
 
 class InterruptEncoder {
