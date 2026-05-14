@@ -10,6 +10,13 @@
 
 #define MAX_ENCODERS 16
 #define US_DEBOUNCE 10
+
+#ifdef ESP32ENCODER_USE_INT32
+typedef int32_t enc_count_t;
+#else
+typedef int64_t enc_count_t;
+#endif
+
 #ifdef ARDUINO
 #include <Arduino.h>
 #else 
@@ -31,10 +38,10 @@ public:
 	void attach(int aPinNum, int bPinNum);
 	volatile bool aState=0;
 	volatile bool bState=0;
-	volatile int64_t count=0;
+	volatile enc_count_t count=0;
 	volatile int64_t microsLastA=0;
 	volatile int64_t microsTimeBetweenTicks=0;
-	int64_t read();
+	enc_count_t read();
 };
 
 #endif /* INTERRUPTENCODER_H_ */

@@ -281,15 +281,15 @@ void ESP32Encoder::attachFullQuad(int aPintNumber, int bPinNumber) {
 	attach(aPintNumber, bPinNumber, encType::full);
 }
 
-void ESP32Encoder::setCount(int64_t value) {
+void ESP32Encoder::setCount(enc_count_t value) {
 	_ENTER_CRITICAL();
 	count = value - getCountRaw();
 	_EXIT_CRITICAL();
 }
 
-int64_t ESP32Encoder::getCountRaw() {
+enc_count_t ESP32Encoder::getCountRaw() {
 	int16_t c;
-	int64_t compensate = 0;
+	enc_count_t compensate = 0;
 	_ENTER_CRITICAL();
 	pcnt_get_counter_value(unit, &c);
 	// check if counter overflowed, if so re-read and compensate
@@ -306,25 +306,25 @@ int64_t ESP32Encoder::getCountRaw() {
 	return compensate + c;
 }
 
-int64_t ESP32Encoder::getCount() {
+enc_count_t ESP32Encoder::getCount() {
 	_ENTER_CRITICAL();
-	int64_t result = count + getCountRaw();
+	enc_count_t result = count + getCountRaw();
 	_EXIT_CRITICAL();
 	return result;
 }
 
-int64_t ESP32Encoder::clearCount() {
+enc_count_t ESP32Encoder::clearCount() {
 	_ENTER_CRITICAL();
 	count = 0;
 	_EXIT_CRITICAL();
 	return pcnt_counter_clear(unit);
 }
 
-int64_t ESP32Encoder::pauseCount() {
+enc_count_t ESP32Encoder::pauseCount() {
 	return pcnt_counter_pause(unit);
 }
 
-int64_t ESP32Encoder::resumeCount() {
+enc_count_t ESP32Encoder::resumeCount() {
 	return pcnt_counter_resume(unit);
 }
 

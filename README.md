@@ -42,6 +42,14 @@ To specify the weak pull resistor set the value [useInternalWeakPullResistors](h
 ## ISR service CPU core
 To specify the CPU core for the PCNT ISR service set the value [isrServiceCpuCore](https://madhephaestus.github.io/ESP32Encoder/classESP32Encoder.html#a445e515b31ade19658075aa7417086bb) to the desired core number. This can be usefull to prevent concurrency problems where the total count might not be updated correctly yet while it is read.
 
+## Optional 32-bit counter
+By default, the library uses `int64_t` for counts. If you want to use `int32_t` (e.g. to save some memory or cycles on 32-bit architecture), you can define `ESP32ENCODER_USE_INT32` at the beginning of your project (before including the library headers).
+
+```cpp
+#define ESP32ENCODER_USE_INT32
+#include <ESP32Encoder.h>
+```
+
 # A note on KY-040 and similar
 
 The "switch style" encoder wheels used by breakout modules such as:

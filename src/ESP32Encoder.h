@@ -1,6 +1,13 @@
 #pragma once
 #include <driver/gpio.h>
 #include <driver/pcnt.h>
+
+#ifdef ESP32ENCODER_USE_INT32
+typedef int32_t enc_count_t;
+#else
+typedef int64_t enc_count_t;
+#endif
+
 #ifndef ARDUINO
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
@@ -44,14 +51,14 @@ public:
 	void attachHalfQuad(int aPintNumber, int bPinNumber);
 	void attachFullQuad(int aPintNumber, int bPinNumber);
 	void attachSingleEdge(int aPintNumber, int bPinNumber);
-	int64_t getCount();
-	int64_t clearCount();
-	int64_t pauseCount();
-	int64_t resumeCount();
+	enc_count_t getCount();
+	enc_count_t clearCount();
+	enc_count_t pauseCount();
+	enc_count_t resumeCount();
 	void detach();
 	[[deprecated("Replaced by detach")]] void detatch();
 	bool isAttached(){return attached;}
-	void setCount(int64_t value);
+	void setCount(enc_count_t value);
 	void setFilter(uint16_t value);
 	static ESP32Encoder *encoders[MAX_ESP32_ENCODERS];
 	bool always_interrupt;
@@ -59,7 +66,7 @@ public:
 	gpio_num_t bPinNumber;
 	pcnt_unit_t unit;
 	int countsMode = 2;
-	volatile int64_t count=0;
+	volatile enc_count_t count=0;
 	pcnt_config_t r_enc_config;
 	static puType useInternalWeakPullResistors;
 	static uint32_t isrServiceCpuCore;
@@ -69,7 +76,7 @@ public:
 private:
 	static bool attachedInterrupt;
 	void attach(int aPintNumber, int bPinNumber, encType et);
-	int64_t getCountRaw();
+	enc_count_t getCountRaw();
 	bool attached;
   bool direction;
   bool working;

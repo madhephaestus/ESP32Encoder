@@ -26,7 +26,7 @@ InterruptEncoder::~InterruptEncoder() {
 	if(attached)
 		detachInterrupt(digitalPinToInterrupt(apin));
 }
-int64_t  InterruptEncoder::read() {
+enc_count_t  InterruptEncoder::read() {
 	return count*2;
 }
 void InterruptEncoder::attach(int aPinNum, int bPinNum) {
@@ -68,7 +68,7 @@ InterruptEncoder::~InterruptEncoder() {
         gpio_uninstall_isr_service();
     }
 }
-int64_t InterruptEncoder::read() { return count * 2; }
+enc_count_t InterruptEncoder::read() { return count * 2; }
 void InterruptEncoder::attach(int aPinNum, int bPinNum) {
     if (attached)
         return;
