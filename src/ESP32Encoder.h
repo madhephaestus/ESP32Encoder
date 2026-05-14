@@ -1,6 +1,7 @@
 #pragma once
 #include <driver/gpio.h>
 #include <driver/pcnt.h>
+#include <stdint.h>
 
 #ifdef ESP32ENCODER_USE_INT32
 typedef int32_t enc_count_t;
